@@ -1,26 +1,26 @@
 /**
- * content.js — V4 com LangDB + Kuromoji + CSS Custom Highlight API
+ * content.js — V4 with LangDB + Kuromoji + CSS Custom Highlight API
  *
- * Diferenças da V3:
- *  - V3: Partículas, cores e tooltips hardcoded em português.
- *  - V4: Tudo vem do banco de dados (languages/*.json).
- *        Suporta múltiplas línguas (japonês, coreano, chinês, etc.)
- *        Tooltips traduzidos para qualquer locale.
- *        Engine plugável: Kuromoji (morfológico) OU Regex (pattern-based).
+ * Differences from V3:
+ *  - V3: Particles, colors, and tooltips hardcoded in Portuguese.
+ *  - V4: Everything comes from the database (languages/*.json).
+ *        Supports multiple languages (Japanese, Korean, Chinese, etc.)
+ *        Tooltips translated to any locale.
+ *        Pluggable engine: Kuromoji (morphological) OR Regex (pattern-based).
  *
- * POS tags relevantes do Kuromoji (IPAdic):
- *  - 助詞 (joshi): partículas
- *    - 格助詞: caso (が, を, に, で, と, へ, から, まで)
- *    - 係助詞: tópico/binding (は, も)
- *    - 接続助詞: conjuntiva (て, ば, と, ので, のに, けど)
- *    - 終助詞: final de frase (ね, よ, ぞ, ぜ, わ, かな, かしら)
+ * Relevant Kuromoji POS tags (IPAdic):
+ *  - 助詞 (joshi): particles
+ *    - 格助詞: case (が, を, に, で, と, へ, から, まで)
+ *    - 係助詞: topic/binding (は, も)
+ *    - 接続助詞: conjunctive (て, ば, と, ので, のに, けど)
+ *    - 終助詞: sentence final (ね, よ, ぞ, ぜ, わ, かな, かしら)
  *    - 副助詞: adverbial (って, でも, まで)
- *  - 助動詞 (jodōshi): auxiliares verbais
- *  - 動詞-非自立: verbos não-independentes (いる, ある, おく, しまう após て)
+ *  - 助動詞 (jodōshi): verbal auxiliaries
+ *  - 動詞-非自立: non-independent verbs (いる, ある, おく, しまう after て)
  */
 
 // ═══════════════════════════════════════════════════════════════════
-// ESTADO
+// STATE
 // ═══════════════════════════════════════════════════════════════════
 
 const SKIP_TAGS = new Set([
@@ -34,44 +34,44 @@ let tokenizer = null;
 let isLoading = false;
 let pendingActivation = false;
 
-// Línguas ativas e dados compilados
+// Active languages and compiled data
 let activeLangs = [];      // [{ id, detectRegex, compiled, engine }]
 let currentLocale = 'pt-BR';
 
-// Observador de mutações e navegação SPA
+// Mutation observer and SPA navigation
 let observer = null;
 let debounceTimer = null;
 let lastUrl = location.href;
 let DEBOUNCE_MS = 300;
 
-// Otimização para sites de vídeo/legendas
+// Optimization for video/subtitle sites
 if (/(youtube\.com|netflix\.com|crunchyroll\.com|viki\.com|primevideo\.com|hulu\.com|animelon\.com)/i.test(location.hostname)) {
   DEBOUNCE_MS = 10;
-  console.log('[日本語カラー] Site de vídeo detectado. Taxa de atualização (debounce) reduzida para acompanhar legendas.');
+  console.log('[NihongoColor] Video site detected. Debounce rate reduced to match subtitles.');
 }
-// Estado do Highlight API (Sem modificar o DOM)
+// Highlight API State (Without modifying the DOM)
 const nodeRanges = new WeakMap();     // TextNode -> Range[]
 const highlightMap = new Map();         // Color -> Highlight object
 const rangeData = new WeakMap();     // Range -> { color, title }
-const processedNodes = new WeakSet();     // TextNodes já processados
+const processedNodes = new WeakSet();     // TextNodes already processed
 
 let tooltipEl = null;
 let currentHoverRange = null;
 
 // ═══════════════════════════════════════════════════════════════════
-// INICIALIZAÇÃO DO LANGDB + KUROMOJI
+// LANGDB + KUROMOJI INITIALIZATION
 // ═══════════════════════════════════════════════════════════════════
 
 async function initLanguages() {
-  // Carregar locale salvo ou padrão
+  // Load saved or default locale
   const stored = await chrome.storage.local.get(['jpLocale', 'jpEnabledLangs']);
   currentLocale = stored.jpLocale || 'pt-BR';
   const enabledLangIds = stored.jpEnabledLangs || ['japanese'];
 
-  // Inicializar LangDB
+  // Initialize LangDB
   await LangDB.init(currentLocale);
 
-  // Preparar línguas ativas
+  // Prepare active languages
   activeLangs = [];
   for (const langId of enabledLangIds) {
     const compiled = LangDB.getCompiled(langId);
@@ -87,7 +87,7 @@ async function initLanguages() {
     }
   }
 
-  console.log(`[日本語カラー] LangDB pronto — ${activeLangs.length} língua(s) ativa(s): ${activeLangs.map(l => l.id).join(', ')}`);
+  console.log(`[NihongoColor] LangDB ready — ${activeLangs.length} active language(s): ${activeLangs.map(l => l.id).join(', ')}`);
 }
 
 function initTokenizer() {
@@ -111,11 +111,11 @@ function initTokenizer() {
     kuromoji.builder({ dicPath }).build((err, _tokenizer) => {
       isLoading = false;
       if (err) {
-        console.error('[日本語カラー] Erro ao carregar Kuromoji:', err);
+        console.error('[NihongoColor] Error loading Kuromoji:', err);
         reject(err);
       } else {
         tokenizer = _tokenizer;
-        console.log('[日本語カラー] Kuromoji inicializado com sucesso ✓');
+        console.log('[NihongoColor] Kuromoji successfully initialized ✓');
         resolve(tokenizer);
       }
     });
@@ -123,7 +123,7 @@ function initTokenizer() {
 }
 
 // ═══════════════════════════════════════════════════════════════════
-// DETECÇÃO DE LÍNGUA POR TEXTO
+// LANGUAGE DETECTION BY TEXT
 // ═══════════════════════════════════════════════════════════════════
 
 function detectLanguagesInText(text) {
@@ -137,7 +137,7 @@ function detectLanguagesInText(text) {
 }
 
 // ═══════════════════════════════════════════════════════════════════
-// CSS HIGHLIGHTS E TOOLTIPS (SEM ALTERAR O DOM)
+// CSS HIGHLIGHTS AND TOOLTIPS (WITHOUT MODIFYING DOM)
 // ═══════════════════════════════════════════════════════════════════
 
 function addHighlightCSS(color) {
@@ -163,7 +163,7 @@ function addHighlightCSS(color) {
   }
 }
 
-// CSS para SOV roles (usa background-color, coexiste com grammar colors)
+// CSS for SOV roles (uses background-color, coexists with grammar colors)
 const sovHighlightMap = new Map();  // sovKey -> Highlight
 
 function addSovHighlightCSS(bgColor, borderColor, sovKey) {
@@ -220,7 +220,7 @@ function createTooltip() {
   CSS.highlights.set('jp-hover', hoverHl);
 }
 
-// Detecta o mouse passando por cima de um texto com Range destacado
+// Detects mouse hovering over text with highlighted Range
 document.addEventListener('mousemove', (e) => {
   if (!isActive) {
     if (tooltipEl) tooltipEl.style.display = 'none';
@@ -253,7 +253,7 @@ document.addEventListener('mousemove', (e) => {
     if (!tooltipEl) createTooltip();
     tooltipEl.textContent = data.title;
 
-    // Mostrar acima do cursor para não sobrepor o Rikaikun (que aparece abaixo)
+    // Show above cursor to not overlap Rikaikun (which appears below)
     tooltipEl.style.display = 'block';
     const tipH = tooltipEl.offsetHeight || 30;
     const tipW = tooltipEl.offsetWidth || 200;
@@ -262,11 +262,11 @@ document.addEventListener('mousemove', (e) => {
     let top = e.clientY - tipH - OFFSET;
     let left = e.clientX + OFFSET;
 
-    // Fallback: se sair do topo da tela, mostra abaixo mesmo
+    // Fallback: if it goes off top of screen, show below
     if (top < 4) top = e.clientY + OFFSET + 16;
-    // Clamp horizontal: não sair da borda direita
+    // Horizontal clamp: do not go off right edge
     if (left + tipW > window.innerWidth - 4) left = window.innerWidth - tipW - 8;
-    // Clamp esquerda
+    // Left clamp
     if (left < 4) left = 4;
 
     tooltipEl.style.left = left + 'px';
@@ -291,7 +291,7 @@ document.addEventListener('mousemove', (e) => {
 });
 
 // ═══════════════════════════════════════════════════════════════════
-// ANÁLISE MORFOLÓGICA (KUROMOJI ENGINE)
+// MORPHOLOGICAL ANALYSIS (KUROMOJI ENGINE)
 // ═══════════════════════════════════════════════════════════════════
 
 function processTextNodeKuromoji(node, compiled) {
@@ -305,7 +305,7 @@ function processTextNodeKuromoji(node, compiled) {
 
   const ranges = nodeRanges.get(node) || [];
 
-  // Pré-computar posições de cada token para o SOV pass
+  // Pre-compute positions of each token for SOV pass
   const tokenPositions = [];
   let posAccum = 0;
   for (const tok of tokens) {
@@ -313,7 +313,7 @@ function processTextNodeKuromoji(node, compiled) {
     posAccum += tok.surface_form.length;
   }
 
-  // Pass 1: Grammar highlighting (partículas, formas verbais, adjetivos)
+  // Pass 1: Grammar highlighting (particles, verb forms, adjectives)
   while (i < tokens.length) {
     const tok = tokens[i];
     const style = resolveTokenStyle(tokens, i, compiled);
@@ -336,7 +336,7 @@ function processTextNodeKuromoji(node, compiled) {
         rangeData.set(range, { color: style.color, title: style.title });
         ranges.push(range);
       } catch (e) {
-        // Range errors ocorrem se o texto mudou no exato milissegundo, ignora pacificamente
+        // Range errors occur if text changed at the exact millisecond, ignore peacefully
       }
       currentIndex += style.text.length;
       i += style.skip;
@@ -357,7 +357,7 @@ function processTextNodeKuromoji(node, compiled) {
 }
 
 // ═══════════════════════════════════════════════════════════════════
-// SOV PASS — SUJEITO / OBJETO / VERBO (BACKGROUND LAYER)
+// SOV PASS — SUBJECT / OBJECT / VERB (BACKGROUND LAYER)
 // ═══════════════════════════════════════════════════════════════════
 
 function isNounLike(token, sovRole) {
@@ -389,12 +389,12 @@ function addSovRange(node, start, end, sovRole, ranges) {
     rangeData.set(range, { color: sovRole.borderColor, title: sovRole.title });
     ranges.push(range);
   } catch (e) {
-    // Ignora erros de Range
+    // Ignore Range errors
   }
 }
 
 function processSovPass(node, tokens, tokenPositions, sovRoles, ranges) {
-  // 1) Subject & Object: encontra partículas gatilho e olha para trás
+  // 1) Subject & Object: find trigger particles and look back
   for (const role of ['subject', 'object']) {
     const config = sovRoles[role];
     if (!config) continue;
@@ -404,7 +404,7 @@ function processSovPass(node, tokens, tokenPositions, sovRoles, ranges) {
       if (tok.pos !== config.triggerPOS) continue;
       if (!config.triggerParticles.has(tok.surface_form)) continue;
 
-      // Lookback: encontrar substantivos consecutivos antes da partícula
+      // Lookback: find consecutive nouns before the particle
       let spanStart = null;
       let spanEnd = null;
 
@@ -413,7 +413,7 @@ function processSovPass(node, tokens, tokenPositions, sovRoles, ranges) {
           spanStart = tokenPositions[j].start;
           if (spanEnd === null) spanEnd = tokenPositions[j].end;
         } else {
-          break; // Parar no primeiro token não-substantivo
+          break; // Stop at first non-noun token
         }
       }
 
@@ -423,7 +423,7 @@ function processSovPass(node, tokens, tokenPositions, sovRoles, ranges) {
     }
   }
 
-  // 2) Verb: verbos independentes (動詞 + 自立)
+  // 2) Verb: independent verbs (動詞 + 自立)
   if (sovRoles.verb) {
     const config = sovRoles.verb;
     for (let i = 0; i < tokens.length; i++) {
@@ -456,9 +456,16 @@ function resolveTokenStyle(tokens, idx, compiled) {
     verbConjugationRules,
     teFormStyle,
     adjectiveRules,
+    specificWordsStyle,
   } = compiled;
 
-  // 1) Auxiliares compostos: て + verbo não-independente
+  // 0) Specific words (Demonstratives, etc) - Highest priority
+  if (specificWordsStyle && specificWordsStyle[surface]) {
+    const style = specificWordsStyle[surface];
+    return { text: surface, color: style.color, title: style.title, skip: 1 };
+  }
+
+  // 1) Compound auxiliaries: て + non-independent verb
   if (auxTeFormConfig && pos === auxTeFormConfig.triggerPOS && pos1 === auxTeFormConfig.triggerPOSDetail && auxTeFormConfig.triggers.has(surface)) {
     const next = tokens[idx + 1];
     if (next && next.pos === auxTeFormConfig.nextPOS && next.pos_detail_1 === auxTeFormConfig.nextPOSDetail) {
@@ -470,13 +477,13 @@ function resolveTokenStyle(tokens, idx, compiled) {
     }
   }
 
-  // 2) Auxiliares coloquiais
+  // 2) Colloquial auxiliaries
   if (colloquialStyle[surface]) {
     const style = colloquialStyle[surface];
     return { text: surface, color: style.color, title: style.title, skip: 1 };
   }
 
-  // 3) Partículas
+  // 3) Particles
   if (pos === '助詞') {
     if (quoteStyle[surface]) return { text: surface, color: quoteStyle[surface].color, title: quoteStyle[surface].title, skip: 1 };
     if (conditionalStyle[surface]) return { text: surface, color: conditionalStyle[surface].color, title: conditionalStyle[surface].title, skip: 1 };
@@ -486,9 +493,9 @@ function resolveTokenStyle(tokens, idx, compiled) {
       return { text: surface, color: finalParticleStyle.color, title: finalParticleStyle.title + ' (' + surface + ')', skip: 1 };
     }
 
-    // 5) Forma て standalone (quando NÃO seguida de auxiliar composto)
+    // 5) Standalone て form (when NOT followed by compound auxiliary)
     if (teFormStyle && teFormStyle.surfaces.has(surface) && pos1 === teFormStyle.posDetail) {
-      // Já tratado pelo check 1) se seguido de auxiliar, então aqui só chega o て "solto"
+      // Already handled by check 1) if followed by auxiliary, so only "loose" て arrives here
       const next = tokens[idx + 1];
       const isAuxNext = next && next.pos === '動詞' && next.pos_detail_1 === '非自立';
       if (!teFormStyle.skipIfNextIsAuxiliary || !isAuxNext) {
@@ -502,7 +509,7 @@ function resolveTokenStyle(tokens, idx, compiled) {
     }
   }
 
-  // 4) Auxiliares verbais (たら / なら como 助動詞) — alta prioridade
+  // 4) Verbal auxiliaries (たら / なら as 助動詞) — high priority
   if (pos === '助動詞') {
     for (const [auxSurface, auxData] of Object.entries(auxVerbalStyle)) {
       if (surface === auxSurface || (auxData.altMatchField && tok[auxData.altMatchField] === auxSurface)) {
@@ -511,24 +518,24 @@ function resolveTokenStyle(tokens, idx, compiled) {
     }
   }
 
-  // 6) Formas verbais (た, ない, ます, う, よう, です, etc.)
+  // 6) Verb forms (た, ない, ます, う, よう, です, etc.)
   if (pos === '助動詞' && verbFormRules && verbFormRules.length > 0) {
     for (const rule of verbFormRules) {
       if (tok.pos !== rule.pos) continue;
       const fieldValue = tok[rule.matchField];
       if (fieldValue === rule.matchValue) {
-        // Verificar exclusões de surface (ex: だ como auxiliar mas não な/なら)
+        // Check surface exclusions (e.g. だ as auxiliary but not な/なら)
         if (rule.surfaceExclude.length > 0 && rule.surfaceExclude.includes(surface)) continue;
         return { text: surface, color: rule.color, title: rule.title, skip: 1 };
       }
     }
   }
 
-  // 7) Conjugações verbais (imperativo: 命令形)
+  // 7) Verb conjugations (imperative: 命令形)
   if (pos === '動詞' && verbConjugationRules && verbConjugationRules.length > 0) {
     for (const rule of verbConjugationRules) {
       if (tok.pos !== rule.pos) continue;
-      // Kuromoji usa conjugated_form (ex: "命令ｅ", "命令ｉ", "命令ro")
+      // Kuromoji uses conjugated_form (e.g. "命令ｅ", "命令ｉ", "命令ro")
       const conjForm = tok.conjugated_form || '';
       if (conjForm.includes(rule.conjugatedFormMatch)) {
         return { text: surface, color: rule.color, title: rule.title, skip: 1 };
@@ -536,7 +543,7 @@ function resolveTokenStyle(tokens, idx, compiled) {
     }
   }
 
-  // 8) Adjetivos (い-adj: 形容詞-自立, な-adj: 名詞-形容動詞語幹)
+  // 8) Adjectives (い-adj: 形容詞-自立, な-adj: 名詞-形容動詞語幹)
   if (adjectiveRules && adjectiveRules.length > 0) {
     for (const rule of adjectiveRules) {
       if (tok.pos === rule.pos && tok.pos_detail_1 === rule.posDetail) {
@@ -549,7 +556,7 @@ function resolveTokenStyle(tokens, idx, compiled) {
 }
 
 // ═══════════════════════════════════════════════════════════════════
-// ANÁLISE POR REGEX (REGEX ENGINE — PARA COREANO, CHINÊS, ETC.)
+// REGEX ANALYSIS (REGEX ENGINE — FOR KOREAN, CHINESE, ETC.)
 // ═══════════════════════════════════════════════════════════════════
 
 function processTextNodeRegex(node, compiled) {
@@ -559,7 +566,7 @@ function processTextNodeRegex(node, compiled) {
   const ranges = nodeRanges.get(node) || [];
 
   for (const rule of compiled.regexRules) {
-    // Reset regex lastIndex para cada nó
+    // Reset regex lastIndex for each node
     rule.regex.lastIndex = 0;
     let match;
 
@@ -584,7 +591,7 @@ function processTextNodeRegex(node, compiled) {
         rangeData.set(range, { color: rule.color, title: rule.title });
         ranges.push(range);
       } catch (e) {
-        // Ignora erros de Range
+        // Ignore Range errors
       }
     }
   }
@@ -595,18 +602,18 @@ function processTextNodeRegex(node, compiled) {
 }
 
 // ═══════════════════════════════════════════════════════════════════
-// TREE WALKER — PROCESSA TODOS OS TEXT NODES
+// TREE WALKER — PROCESS ALL TEXT NODES
 // ═══════════════════════════════════════════════════════════════════
 
 function processSubtree(root) {
   if (!root) return 0;
   if (activeLangs.length === 0) return 0;
 
-  // Verifica se pelo menos o Kuromoji está pronto (se necessário)
+  // Check if at least Kuromoji is ready (if necessary)
   const needsKuromoji = activeLangs.some(l => l.engine === 'kuromoji');
   if (needsKuromoji && !tokenizer) return 0;
 
-  // Construir regex combinado de todas as línguas ativas
+  // Build combined regex from all active languages
   const combinedPattern = activeLangs.map(l => l.detectRegex.source).join('|');
   const combinedRegex = new RegExp(combinedPattern);
 
@@ -630,7 +637,7 @@ function processSubtree(root) {
     if (processedNodes.has(current)) continue;
     processedNodes.add(current);
 
-    // Detectar quais línguas estão presentes no nó
+    // Detect which languages are present in the node
     const matchedLangs = detectLanguagesInText(current.nodeValue);
     for (const lang of matchedLangs) {
       if (lang.engine === 'kuromoji' && tokenizer) {
@@ -649,12 +656,12 @@ function processSubtree(root) {
 function processPage() {
   const count = processSubtree(document.body);
   if (count > 0) {
-    console.log(`[日本語カラー] Processados ${count} nós de texto.`);
+    console.log(`[NihongoColor] Processed ${count} text nodes.`);
   }
 }
 
 // ═══════════════════════════════════════════════════════════════════
-// MUTATION OBSERVER — CONTEÚDO DINÂMICO
+// MUTATION OBSERVER — DYNAMIC CONTENT
 // ═══════════════════════════════════════════════════════════════════
 
 let pendingNodes = [];
@@ -673,7 +680,7 @@ function scheduleDebouncedProcess() {
       }
     }
     if (total > 0) {
-      console.log(`[日本語カラー] Dinâmico: ${total} nós processados.`);
+      console.log(`[NihongoColor] Dynamic: ${total} nodes processed.`);
     }
   }, DEBOUNCE_MS);
 }
@@ -744,7 +751,7 @@ function startObserver() {
     characterData: true,
   });
 
-  console.log('[日本語カラー] MutationObserver ativado ✓');
+  console.log('[NihongoColor] MutationObserver activated ✓');
 }
 
 function stopObserver() {
@@ -757,7 +764,7 @@ function stopObserver() {
 }
 
 // ═══════════════════════════════════════════════════════════════════
-// DETECÇÃO DE NAVEGAÇÃO SPA (pushState / replaceState / popstate)
+// SPA NAVIGATION DETECTION (pushState / replaceState / popstate)
 // ═══════════════════════════════════════════════════════════════════
 
 let historyPatched = false;
@@ -769,7 +776,7 @@ function onSpaNavigation() {
 
   if (!isActive) return;
 
-  console.log(`[日本語カラー] Navegação SPA detectada → ${newUrl}`);
+  console.log(`[NihongoColor] SPA navigation detected → ${newUrl}`);
 
   setTimeout(() => {
     if (isActive) processPage();
@@ -794,11 +801,11 @@ function patchHistory() {
 
   window.addEventListener('popstate', onSpaNavigation);
 
-  console.log('[日本語カラー] Detecção SPA ativada ✓');
+  console.log('[NihongoColor] SPA detection activated ✓');
 }
 
 // ═══════════════════════════════════════════════════════════════════
-// LIMPAR HIGHLIGHTS
+// CLEAR HIGHLIGHTS
 // ═══════════════════════════════════════════════════════════════════
 
 function clearHighlights() {
@@ -817,28 +824,28 @@ function clearHighlights() {
 }
 
 // ═══════════════════════════════════════════════════════════════════
-// ATIVAÇÃO / DESATIVAÇÃO
+// ACTIVATION / DEACTIVATION
 // ═══════════════════════════════════════════════════════════════════
 
 async function activate() {
   try {
-    // 1) Carregar banco de dados de línguas
+    // 1) Load languages database
     await initLanguages();
 
-    // 2) Inicializar Kuromoji se alguma língua precisa
+    // 2) Initialize Kuromoji if any language needs it
     const needsKuromoji = activeLangs.some(l => l.engine === 'kuromoji');
     if (needsKuromoji) {
       await initTokenizer();
     }
 
-    // 3) Processar página
+    // 3) Process page
     processPage();
     isActive = true;
     startObserver();
     patchHistory();
     return 'activated';
   } catch (err) {
-    console.error('[日本語カラー] Falha ao ativar:', err);
+    console.error('[NihongoColor] Failed to activate:', err);
     return 'error';
   }
 }
@@ -851,7 +858,7 @@ function deactivate() {
 }
 
 // ═══════════════════════════════════════════════════════════════════
-// MENSAGENS DO POPUP
+// POPUP MESSAGES
 // ═══════════════════════════════════════════════════════════════════
 
 chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
@@ -883,7 +890,7 @@ chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
     return true;
   }
 
-  // Novos comandos para o popup multi-idioma
+  // New commands for multi-language popup
   if (message.action === 'getLanguages') {
     (async () => {
       if (!LangDB.isReady()) await LangDB.init(currentLocale);
@@ -907,7 +914,7 @@ chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
     chrome.storage.local.set({ jpLocale: currentLocale });
     if (LangDB.isReady()) {
       LangDB.setLocale(currentLocale);
-      // Recompilar línguas ativas
+      // Recompile active languages
       for (const lang of activeLangs) {
         lang.compiled = LangDB.getCompiled(lang.id);
       }
@@ -934,7 +941,7 @@ chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
   if (message.action === 'setEnabledLangs') {
     const langIds = message.langIds || ['japanese'];
     chrome.storage.local.set({ jpEnabledLangs: langIds });
-    // Se ativo, recarregar
+    // If active, reload
     if (isActive) {
       deactivate();
       activate().then(() => {

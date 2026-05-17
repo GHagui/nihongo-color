@@ -1,17 +1,17 @@
 /**
- * lang-loader.js — Motor de carregamento de language packs
+ * lang-loader.js — Language pack loading engine
  *
- * Carrega o registry.json e os packs individuais (japanese.json, korean.json, etc.)
- * e expõe uma API limpa para o content.js consumir sem conhecer a estrutura interna.
+ * Loads registry.json and individual packs (japanese.json, korean.json, etc.)
+ * and exposes a clean API for content.js to consume without knowing internal structure.
  *
- * Arquitetura:
- *  registry.json  →  lista de línguas disponíveis + metadados
- *  {lang}.json    →  pack completo com partículas, categorias, tooltips localizados
- *  lang-loader.js →  lê tudo, resolve locale, e entrega objetos prontos para uso
+ * Architecture:
+ *  registry.json  →  list of available languages + metadata
+ *  {lang}.json    →  full pack with particles, categories, localized tooltips
+ *  lang-loader.js →  reads everything, resolves locale, and delivers ready-to-use objects
  */
 
 // ═══════════════════════════════════════════════════════════════════
-// ESTADO DO LOADER
+// LOADER STATE
 // ═══════════════════════════════════════════════════════════════════
 
 const LangDB = {
@@ -23,14 +23,14 @@ const LangDB = {
   _ready: false,
 
   // ═══════════════════════════════════════════════════════════════
-  // INICIALIZAÇÃO
+  // INITIALIZATION
   // ═══════════════════════════════════════════════════════════════
 
   async init(locale) {
     if (this._ready) return;
     this._locale = locale || 'pt-BR';
 
-    // 1) Carregar registry e custom styles
+    // 1) Load registry and custom styles
     const registryUrl = chrome.runtime.getURL('languages/registry.json');
     const res = await fetch(registryUrl);
     this._registry = await res.json();
@@ -38,7 +38,7 @@ const LangDB = {
     const stored = await chrome.storage.local.get(['jpCustomStyles']);
     this._customStyles = stored.jpCustomStyles || {};
 
-    // 2) Carregar cada pack habilitado
+    // 2) Load each enabled pack
     const loadPromises = this._registry.languages
       .filter(lang => lang.enabled)
       .map(async (lang) => {
@@ -49,19 +49,19 @@ const LangDB = {
           this._packs.set(lang.id, pack);
           this._enabledLangs.add(lang.id);
           this._compiled.set(lang.id, this._compilePack(pack));
-          console.log(`[LangDB] Pack carregado: ${lang.id} (${lang.name.native})`);
+          console.log(`[LangDB] Pack loaded: ${lang.id} (${lang.name.native})`);
         } catch (err) {
-          console.warn(`[LangDB] Erro ao carregar pack '${lang.id}':`, err);
+          console.warn(`[LangDB] Error loading pack '${lang.id}':`, err);
         }
       });
 
     await Promise.all(loadPromises);
     this._ready = true;
-    console.log(`[LangDB] Pronto — ${this._packs.size} línguas carregadas, locale: ${this._locale}`);
+    console.log(`[LangDB] Ready — ${this._packs.size} languages loaded, locale: ${this._locale}`);
   },
 
   // ═══════════════════════════════════════════════════════════════
-  // COMPILAÇÃO DE PACK → LOOKUP TABLES
+  // PACK COMPILATION → LOOKUP TABLES
   // ═══════════════════════════════════════════════════════════════
 
   _compilePack(pack) {
@@ -72,7 +72,7 @@ const LangDB = {
 
     const catEnabled = (catId) => customStyles[catId]?.enabled !== false;
 
-    // Resolve a cor e tooltip de uma categoria
+    // Resolves category color and tooltip
     const catColor = (catId) => customStyles[catId]?.color || cats[catId]?.color || '#888';
     const catBorderColor = (catId) => customStyles[catId]?.borderColor || cats[catId]?.borderColor || catColor(catId);
     
@@ -87,7 +87,7 @@ const LangDB = {
       return tooltipObj[locale] || tooltipObj['en-US'] || tooltipObj[Object.keys(tooltipObj)[0]] || '';
     };
 
-    // ── Partículas (caso/tópico/etc) ──
+    // ── Particles (case/topic/etc) ──
     const particleStyle = {};
     if (pack.particles) {
       for (const [surface, data] of Object.entries(pack.particles)) {
@@ -122,7 +122,7 @@ const LangDB = {
       }
     }
 
-    // ── Condicionais ──
+    // ── Conditionals ──
     const conditionalStyle = {};
     if (pack.conditionals) {
       for (const [surface, data] of Object.entries(pack.conditionals)) {
@@ -135,7 +135,7 @@ const LangDB = {
       }
     }
 
-    // ── Citação ──
+    // ── Quotes ──
     const quoteStyle = {};
     if (pack.quotes) {
       for (const [surface, data] of Object.entries(pack.quotes)) {
@@ -148,7 +148,7 @@ const LangDB = {
       }
     }
 
-    // ── Auxiliares compostos (て + verbo) ──
+    // ── Compound auxiliaries (て + verb) ──
     let auxCompoundColor = null;
     let auxCompoundMap = {};
     let auxTeFormConfig = null;
@@ -169,7 +169,7 @@ const LangDB = {
       }
     }
 
-    // ── Coloquiais ──
+    // ── Colloquials ──
     const colloquialStyle = {};
     if (pack.colloquials) {
       for (const [surface, data] of Object.entries(pack.colloquials)) {
@@ -182,7 +182,7 @@ const LangDB = {
       }
     }
 
-    // ── Auxiliares verbais (たら, なら como 助動詞) ──
+    // ── Verbal auxiliaries (たら, なら as 助動詞) ──
     const auxVerbalStyle = {};
     if (pack.auxiliaryVerbal) {
       for (const [surface, data] of Object.entries(pack.auxiliaryVerbal)) {
@@ -197,7 +197,7 @@ const LangDB = {
       }
     }
 
-    // ── Formas verbais (た, ない, ます, う, よう, etc.) ──
+    // ── Verb forms (た, ない, ます, う, よう, etc.) ──
     const verbFormRules = [];
     if (pack.verbForms) {
       for (const [key, data] of Object.entries(pack.verbForms)) {
@@ -215,7 +215,7 @@ const LangDB = {
       }
     }
 
-    // ── Conjugações verbais (imperativo, etc.) ──
+    // ── Verb conjugations (imperative, etc.) ──
     const verbConjugationRules = [];
     if (pack.verbConjugations) {
       for (const [key, data] of Object.entries(pack.verbConjugations)) {
@@ -231,7 +231,7 @@ const LangDB = {
       }
     }
 
-    // ── Forma て standalone (quando não seguida de auxiliar) ──
+    // ── Standalone て form (when not followed by auxiliary) ──
     let teFormStyle = null;
     if (pack.teFormParticle) {
       const tf = pack.teFormParticle;
@@ -247,7 +247,7 @@ const LangDB = {
       }
     }
 
-    // ── Adjetivos (い-adj, な-adj) ──
+    // ── Adjectives (い-adj, な-adj) ──
     const adjectiveRules = [];
     if (pack.adjectives) {
       for (const [key, data] of Object.entries(pack.adjectives)) {
@@ -263,7 +263,22 @@ const LangDB = {
       }
     }
 
-    // ── SOV Roles (Sujeito-Objeto-Verbo) ──
+    // ── Specific words (e.g. Demonstratives) ──
+    const specificWordsStyle = {};
+    if (pack.specificWords) {
+      for (const [key, data] of Object.entries(pack.specificWords)) {
+        if (catEnabled(data.category)) {
+          for (const surface of data.surfaces) {
+            specificWordsStyle[surface] = {
+              color: catColor(data.category),
+              title: resolveTooltip(data.tooltip),
+            };
+          }
+        }
+      }
+    }
+
+    // ── SOV Roles (Subject-Object-Verb) ──
     let sovRoles = null;
     if (pack.sovRoles) {
       const sr = pack.sovRoles;
@@ -305,7 +320,7 @@ const LangDB = {
       }
     }
 
-    // ── Regex rules (para engines regex-based) ──
+    // ── Regex rules (for regex-based engines) ──
     const regexRules = [];
     if (pack.regexRules) {
       for (const rule of pack.regexRules) {
@@ -321,7 +336,7 @@ const LangDB = {
       }
     }
 
-    // ── Legenda para o popup ──
+    // ── Popup legend ──
     const legend = (pack.legend || []).map(item => ({
       categoryId: item.category,
       enabled: catEnabled(item.category),
@@ -347,6 +362,7 @@ const LangDB = {
       verbConjugationRules,
       teFormStyle,
       adjectiveRules,
+      specificWordsStyle,
       sovRoles,
       regexRules,
       legend,
@@ -354,10 +370,10 @@ const LangDB = {
   },
 
   // ═══════════════════════════════════════════════════════════════
-  // API PÚBLICA
+  // PUBLIC API
   // ═══════════════════════════════════════════════════════════════
 
-  /** Lista de línguas disponíveis */
+  /** List of available languages */
   getLanguages() {
     if (!this._registry) return [];
     return this._registry.languages
@@ -371,55 +387,55 @@ const LangDB = {
       }));
   },
 
-  /** Regex de detecção para uma língua */
+  /** Detection regex for a language */
   getDetectRegex(langId) {
     const lang = this._registry?.languages.find(l => l.id === langId);
     if (!lang) return null;
     return new RegExp(lang.detectRegex);
   },
 
-  /** Tabelas compiladas para uma língua */
+  /** Compiled tables for a language */
   getCompiled(langId) {
     return this._compiled.get(langId) || null;
   },
 
-  /** Dados do registry para uma língua */
+  /** Registry data for a language */
   getRegistryEntry(langId) {
     return this._registry?.languages.find(l => l.id === langId) || null;
   },
 
-  /** Verifica se uma língua usa engine kuromoji */
+  /** Check if a language uses kuromoji engine */
   usesKuromoji(langId) {
     const entry = this.getRegistryEntry(langId);
     return entry?.engine === 'kuromoji';
   },
 
-  /** Legenda formatada para o popup */
+  /** Formatted legend for the popup */
   getLegend(langId) {
     const compiled = this._compiled.get(langId);
     return compiled?.legend || [];
   },
 
-  /** Locale atual */
+  /** Current locale */
   getLocale() {
     return this._locale;
   },
 
-  /** Muda locale e recompila todos os packs */
+  /** Change locale and recompile all packs */
   setLocale(newLocale) {
     this._locale = newLocale;
     for (const [langId, pack] of this._packs) {
       this._compiled.set(langId, this._compilePack(pack));
     }
-    console.log(`[LangDB] Locale atualizado: ${newLocale}`);
+    console.log(`[LangDB] Locale updated: ${newLocale}`);
   },
 
-  /** Verifica se o loader está pronto */
+  /** Check if loader is ready */
   isReady() {
     return this._ready;
   },
 
-  /** Atualiza estilos customizados (chamado pelo content.js) */
+  /** Updates custom styles (called by content.js) */
   updateCustomStyles(styles) {
     this._customStyles = styles;
     for (const langId of this._enabledLangs) {

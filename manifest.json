@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "日本語カラー — Multi-Language Grammar Highlighter",
+  "name": "日本の色 — Multi-Language Grammar Highlighter",
   "version": "4.0.0",
-  "description": "Destaca partículas e estruturas gramaticais do japonês, coreano e chinês com análise morfológica e regex.",
+  "description": "Highlights Japanese, Korean, and Chinese grammar structures and particles with morphological analysis and regex.",
   "icons": {
     "16": "icons/icon16.png",
     "48": "icons/icon48.png",
@@ -15,6 +15,7 @@
   ],
   "action": {
     "default_popup": "popup.html",
+    "default_title": "NihongoColor",
     "default_icon": {
       "16": "icons/icon16.png",
       "48": "icons/icon48.png",

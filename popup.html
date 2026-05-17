@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>日本語カラー</title>
+  <title>日本の色</title>
   <style>
     * {
       margin: 0;
@@ -17,7 +17,7 @@
       font-family: 'Segoe UI', 'Noto Sans JP', system-ui, sans-serif;
       background: linear-gradient(145deg, #0f0c29, #302b63, #24243e);
       color: #e0e0e0;
-      overflow: hidden;
+      overflow: scroll;
     }
 
     /* ── Header ───────────────────────────────────── */
@@ -394,23 +394,23 @@
   <div class="content">
     <div class="status-row">
       <div class="status-dot" id="statusDot"></div>
-      <span class="status-text" id="statusText">Desativado</span>
+      <span class="status-text" id="statusText">Disabled</span>
     </div>
 
-    <button id="toggleBtn">⚡ Ativar Cores na Página</button>
+    <button id="toggleBtn">⚡ Enable Page Colors</button>
 
     <!-- Language chips -->
-    <div class="section-title">Línguas</div>
+    <div class="section-title">Languages</div>
     <div class="lang-selector" id="langSelector">
       <!-- Preenchido dinamicamente -->
     </div>
 
     <!-- Locale -->
     <div class="locale-row">
-      <label for="localeSelect">🌐 Idioma dos tooltips:</label>
+      <label for="localeSelect">🌐 Tooltip Language:</label>
       <select id="localeSelect">
-        <option value="pt-BR">Português (BR)</option>
         <option value="en-US">English (US)</option>
+        <option value="pt-BR">Português (BR)</option>
         <option value="ja">日本語</option>
         <option value="ko">한국어</option>
         <option value="zh">中文</option>
@@ -419,15 +419,15 @@
 
     <!-- Dynamic legend -->
     <div class="legend" id="legendSection">
-      <div class="legend-title">Legenda de Cores</div>
+      <div class="legend-title">Color Legend</div>
       <div class="legend-tabs" id="legendTabs"></div>
       <div class="legend-grid" id="legendGrid">
-        <div class="legend-empty">Selecione uma língua</div>
+        <div class="legend-empty">Select a language</div>
       </div>
     </div>
   </div>
 
-  <div class="footer">v4.0 · LangDB + Kuromoji NLP · Feito com 💜</div>
+  <div class="footer">v4.0 · LangDB + Kuromoji NLP · Made with 💜</div>
 
   <script src="popup.js"></script>
 </body>

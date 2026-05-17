@@ -163,6 +163,22 @@
       },
       "color": "#F39C12"
     },
+    "to_be": {
+      "label": {
+        "pt-BR": "To Be (Cópula)",
+        "en-US": "To Be (Copula)",
+        "ja": "断定"
+      },
+      "color": "#34495E"
+    },
+    "demonstrative": {
+      "label": {
+        "pt-BR": "Demonstrativos",
+        "en-US": "Demonstratives",
+        "ja": "指示詞"
+      },
+      "color": "#16A085"
+    },
     "sov_subject": {
       "label": {
         "pt-BR": "Sujeito",
@@ -507,7 +523,7 @@
         "な",
         "なら"
       ],
-      "category": "verb_past",
+      "category": "to_be",
       "tooltip": {
         "pt-BR": "Passado / Cópula (~だ)",
         "en-US": "Past / Copula (~だ)",
@@ -551,7 +567,7 @@
       "pos": "助動詞",
       "matchField": "basic_form",
       "matchValue": "です",
-      "category": "verb_polite",
+      "category": "to_be",
       "tooltip": {
         "pt-BR": "Cópula polida: é / ser (~です)",
         "en-US": "Polite copula: is (~です)",
@@ -627,6 +643,17 @@
         "pt-BR": "Adjetivo な: precisa de な antes do substantivo",
         "en-US": "な-Adjective: requires な before nouns",
         "ja": "な形容詞（形容動詞語幹）"
+      }
+    }
+  },
+  "specificWords": {
+    "demonstratives": {
+      "surfaces": ["これ", "それ", "あれ", "どれ", "この", "その", "あの", "どの", "ここ", "そこ", "あそこ", "どこ", "こちら", "そちら", "あちら", "どちら"],
+      "category": "demonstrative",
+      "tooltip": {
+        "pt-BR": "Demonstrativos (Ko-So-A-Do)",
+        "en-US": "Demonstratives (Ko-So-A-Do)",
+        "ja": "指示詞（こそあど）"
       }
     }
   },
@@ -776,6 +803,14 @@
     {
       "category": "verb_polite",
       "sample": "ます"
+    },
+    {
+      "category": "to_be",
+      "sample": "だ/です"
+    },
+    {
+      "category": "demonstrative",
+      "sample": "これ/その"
     },
     {
       "category": "adj_i",

@@ -1,12 +1,12 @@
 /**
- * popup.js — V4 com suporte multi-idioma e LangDB.
+ * popup.js — V4 with multi-language support and LangDB.
  *
- * Funcionalidades:
- *  - Toggle ativação/desativação
- *  - Seleção de línguas via chips
- *  - Troca de locale para tooltips
- *  - Legenda dinâmica por língua
- *  - Estado de carregamento do Kuromoji
+ * Features:
+ *  - Activation/deactivation toggle
+ *  - Language selection via chips
+ *  - Locale switching for tooltips
+ *  - Dynamic legend by language
+ *  - Kuromoji loading state
  */
 
 const toggleBtn = document.getElementById('toggleBtn');
@@ -31,22 +31,22 @@ function setUI(state) {
 
   switch (state) {
     case 'on':
-      toggleBtn.textContent = '🔴 Desativar Cores na Página';
+      toggleBtn.textContent = '🔴 Disable Page Colors';
       toggleBtn.classList.add('active');
       statusDot.classList.add('active');
       statusText.classList.add('active');
-      statusText.textContent = 'Ativado';
+      statusText.textContent = 'Enabled';
       break;
     case 'loading':
-      toggleBtn.textContent = '⏳ Carregando…';
+      toggleBtn.textContent = '⏳ Loading…';
       toggleBtn.disabled = true;
       statusDot.classList.add('loading');
       statusText.classList.add('loading');
-      statusText.textContent = 'Carregando dicionários…';
+      statusText.textContent = 'Loading dictionaries…';
       break;
     default:
-      toggleBtn.textContent = '⚡ Ativar Cores na Página';
-      statusText.textContent = 'Desativado';
+      toggleBtn.textContent = '⚡ Enable Page Colors';
+      statusText.textContent = 'Disabled';
   }
 }
 
@@ -80,17 +80,17 @@ function renderLegendTabs() {
   const enabledLangs = allLanguages.filter(l => selectedLangs.has(l.id));
 
   if (enabledLangs.length === 0) {
-    legendGrid.innerHTML = '<div class="legend-empty">Selecione uma língua</div>';
+    legendGrid.innerHTML = '<div class="legend-empty">Select a language</div>';
     activeLegendTab = null;
     return;
   }
 
-  // Se a tab ativa não está mais selecionada, pegar a primeira
+  // If active tab is no longer selected, get the first one
   if (!activeLegendTab || !selectedLangs.has(activeLegendTab)) {
     activeLegendTab = enabledLangs[0].id;
   }
 
-  // Tabs (só mostra se mais de 1 língua)
+  // Tabs (only show if more than 1 language)
   if (enabledLangs.length > 1) {
     for (const lang of enabledLangs) {
       const tab = document.createElement('div');
@@ -104,7 +104,7 @@ function renderLegendTabs() {
     }
   }
 
-  // Carregar legenda via content script
+  // Load legend via content script
   loadLegend(activeLegendTab);
 }
 
@@ -154,8 +154,8 @@ function renderLegendGrid(legend, langId) {
 
     const controlsHtml = item.categoryId ? `
       <div class="legend-controls">
-        <input type="checkbox" class="legend-toggle" data-cat="${item.categoryId}" ${item.enabled !== false ? 'checked' : ''} title="Ativar/Desativar">
-        <input type="color" class="legend-color-picker" data-cat="${item.categoryId}" data-style="${item.style}" value="${hexColor}" title="Mudar cor">
+        <input type="checkbox" class="legend-toggle" data-cat="${item.categoryId}" ${item.enabled !== false ? 'checked' : ''} title="Enable/Disable">
+        <input type="color" class="legend-color-picker" data-cat="${item.categoryId}" data-style="${item.style}" value="${hexColor}" title="Change color">
       </div>
     ` : `
       <div class="legend-controls">
@@ -216,32 +216,32 @@ async function notifyContentScript(styles) {
 }
 
 function renderFallbackLegend(langId) {
-  // Fallback: legenda genérica baseada no langId
+  // Fallback: generic legend based on langId
   const fallbackData = {
     japanese: [
-      { color: 'rgba(52,152,219,0.18)', borderColor: '#3498DB', label: 'Sujeito', sample: '[S]', style: 'sov' },
-      { color: 'rgba(155,89,182,0.18)', borderColor: '#9B59B6', label: 'Objeto', sample: '[O]', style: 'sov' },
-      { color: 'rgba(231,76,60,0.18)', borderColor: '#E74C3C', label: 'Verbo', sample: '[V]', style: 'sov' },
-      { color: '#C0392B', label: 'は Tópico' },
-      { color: '#D35400', label: 'が Sujeito' },
-      { color: '#27AE60', label: 'に Alvo' },
-      { color: '#2980B9', label: 'で Meio' },
-      { color: '#8E44AD', label: 'を Objeto' },
-      { color: '#16A085', label: 'と E/Com' },
-      { color: '#F39C12', label: 'も Também' },
-      { color: '#1ABC9C', label: 'の Posse' },
-      { color: '#2C3E50', label: 'Auxiliares' },
-      { color: '#E67E22', label: 'Final de frase' },
-      { color: '#8E44AD', label: 'ば Condicionais' },
-      { color: '#9B59B6', label: 'って Citação' },
-      { color: '#E74C3C', label: 'て Conector' },
-      { color: '#B7472A', label: 'た Passado' },
-      { color: '#95A5A6', label: 'ない Negativo' },
-      { color: '#3498DB', label: 'よう Volitivo' },
-      { color: '#E74C3C', label: 'ろ/え Imperativo' },
-      { color: '#2ECC71', label: 'ます Polido' },
-      { color: '#E67E22', label: 'い Adjetivo' },
-      { color: '#F39C12', label: 'な Adjetivo' },
+      { color: 'rgba(52,152,219,0.18)', borderColor: '#3498DB', label: 'Subject', sample: '[S]', style: 'sov' },
+      { color: 'rgba(155,89,182,0.18)', borderColor: '#9B59B6', label: 'Object', sample: '[O]', style: 'sov' },
+      { color: 'rgba(231,76,60,0.18)', borderColor: '#E74C3C', label: 'Verb', sample: '[V]', style: 'sov' },
+      { color: '#C0392B', label: 'は Topic' },
+      { color: '#D35400', label: 'が Subject' },
+      { color: '#27AE60', label: 'に Target' },
+      { color: '#2980B9', label: 'で Means' },
+      { color: '#8E44AD', label: 'を Object' },
+      { color: '#16A085', label: 'と And/With' },
+      { color: '#F39C12', label: 'も Also' },
+      { color: '#1ABC9C', label: 'の Possessive' },
+      { color: '#2C3E50', label: 'Auxiliaries' },
+      { color: '#E67E22', label: 'Sentence-final' },
+      { color: '#8E44AD', label: 'ば Conditionals' },
+      { color: '#9B59B6', label: 'って Quote' },
+      { color: '#E74C3C', label: 'て Connector' },
+      { color: '#B7472A', label: 'た Past' },
+      { color: '#95A5A6', label: 'ない Negative' },
+      { color: '#3498DB', label: 'よう Volitional' },
+      { color: '#E74C3C', label: 'ろ/え Imperative' },
+      { color: '#2ECC71', label: 'ます Polite' },
+      { color: '#E67E22', label: 'い Adjective' },
+      { color: '#F39C12', label: 'な Adjective' },
     ],
     korean: [
       { color: '#C0392B', label: '은/는 Topic' },
@@ -265,7 +265,7 @@ function renderFallbackLegend(langId) {
   if (items.length > 0) {
     renderLegendGrid(items);
   } else {
-    legendGrid.innerHTML = '<div class="legend-empty">Legenda indisponível</div>';
+    legendGrid.innerHTML = '<div class="legend-empty">Legend unavailable</div>';
   }
 }
 
@@ -284,7 +284,7 @@ async function notifyContentScript(action, data = {}) {
 // ── Init ──────────────────────────────────────────────────────────
 
 async function initPopup() {
-  // Carregar estado salvo
+  // Load saved state
   const stored = await chrome.storage.local.get([
     'jpHighlighterActive',
     'jpEnabledLangs',
@@ -293,9 +293,9 @@ async function initPopup() {
 
   setUI(stored.jpHighlighterActive ? 'on' : 'off');
   selectedLangs = new Set(stored.jpEnabledLangs || ['japanese']);
-  localeSelect.value = stored.jpLocale || 'pt-BR';
+  localeSelect.value = stored.jpLocale || 'en-US';
 
-  // Carregar lista de línguas do content script
+  // Load language list from content script
   try {
     const response = await notifyContentScript('getLanguages');
     if (response?.languages?.length > 0) {
@@ -303,12 +303,12 @@ async function initPopup() {
     }
   } catch { }
 
-  // Fallback se o content script não respondeu
+  // Fallback if content script didn't respond
   if (allLanguages.length === 0) {
     allLanguages = [
-      { id: 'japanese', name: 'Japonês', native: '日本語', icon: '🇯🇵', engine: 'kuromoji' },
-      { id: 'korean', name: 'Coreano', native: '한국어', icon: '🇰🇷', engine: 'regex' },
-      { id: 'chinese', name: 'Chinês', native: '中文', icon: '🇨🇳', engine: 'regex' },
+      { id: 'japanese', name: 'Japanese', native: '日本語', icon: '🇯🇵', engine: 'kuromoji' },
+      { id: 'korean', name: 'Korean', native: '한국어', icon: '🇰🇷', engine: 'regex' },
+      { id: 'chinese', name: 'Chinese', native: '中文', icon: '🇨🇳', engine: 'regex' },
     ];
   }
 
@@ -342,7 +342,7 @@ toggleBtn.addEventListener('click', async () => {
 
     if (response?.status === 'activated') {
       setUI('on');
-      // Re-render legend agora que o content script está ativo
+      // Re-render legend now that content script is active
       renderLegendTabs();
     } else if (response?.status === 'loading') {
       setUI('loading');
