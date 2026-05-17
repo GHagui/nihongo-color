@@ -157,7 +157,6 @@ function addHighlightCSS(color) {
     styleEl.textContent += `
       ::highlight(${className}) {
         color: ${color} !important;
-        text-decoration: underline dotted ${color} !important;
         text-underline-offset: 3px;
       }
     `;
