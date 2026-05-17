@@ -1,0 +1,544 @@
+{
+  "id": "japanese",
+  "version": "1.0.0",
+  "engine": "kuromoji",
+
+  "categories": {
+    "topic": {
+      "label": { "pt-BR": "Tópico", "en-US": "Topic", "ja": "主題" },
+      "color": "#C0392B"
+    },
+    "subject": {
+      "label": { "pt-BR": "Sujeito", "en-US": "Subject", "ja": "主語" },
+      "color": "#D35400"
+    },
+    "target": {
+      "label": { "pt-BR": "Alvo / Tempo / Lugar", "en-US": "Target / Time / Place", "ja": "対象・時・場所" },
+      "color": "#27AE60"
+    },
+    "means": {
+      "label": { "pt-BR": "Local da ação / Meio", "en-US": "Location / Means", "ja": "場所・手段" },
+      "color": "#2980B9"
+    },
+    "object": {
+      "label": { "pt-BR": "Objeto Direto", "en-US": "Direct Object", "ja": "直接目的語" },
+      "color": "#8E44AD"
+    },
+    "conjunction": {
+      "label": { "pt-BR": "E / Com / Citação", "en-US": "And / With / Quote", "ja": "と接続" },
+      "color": "#16A085"
+    },
+    "also": {
+      "label": { "pt-BR": "Também / Nem", "en-US": "Also / Neither", "ja": "も" },
+      "color": "#F39C12"
+    },
+    "possessive": {
+      "label": { "pt-BR": "Posse / Conexão", "en-US": "Possessive / Connection", "ja": "所有・接続" },
+      "color": "#1ABC9C"
+    },
+    "final_particle": {
+      "label": { "pt-BR": "Emoção do falante", "en-US": "Speaker Emotion", "ja": "終助詞" },
+      "color": "#E67E22"
+    },
+    "conditional": {
+      "label": { "pt-BR": "Condicionais", "en-US": "Conditionals", "ja": "条件" },
+      "color": "#8E44AD"
+    },
+    "quote": {
+      "label": { "pt-BR": "Citação informal / Tópico", "en-US": "Informal Quote / Topic", "ja": "引用" },
+      "color": "#9B59B6"
+    },
+    "auxiliary": {
+      "label": { "pt-BR": "Auxiliares compostos", "en-US": "Compound Auxiliaries", "ja": "複合助動詞" },
+      "color": "#2C3E50"
+    },
+    "verb_te": {
+      "label": { "pt-BR": "Forma て (conector)", "en-US": "て-form (connector)", "ja": "て形" },
+      "color": "#E74C3C"
+    },
+    "verb_past": {
+      "label": { "pt-BR": "Passado (~た)", "en-US": "Past (~た)", "ja": "過去形" },
+      "color": "#B7472A"
+    },
+    "verb_negative": {
+      "label": { "pt-BR": "Negativo (~ない)", "en-US": "Negative (~ない)", "ja": "否定形" },
+      "color": "#95A5A6"
+    },
+    "verb_volitional": {
+      "label": { "pt-BR": "Volitivo (~おう/よう)", "en-US": "Volitional (~おう/よう)", "ja": "意志形" },
+      "color": "#3498DB"
+    },
+    "verb_imperative": {
+      "label": { "pt-BR": "Imperativo (comando)", "en-US": "Imperative (command)", "ja": "命令形" },
+      "color": "#E74C3C"
+    },
+    "verb_polite": {
+      "label": { "pt-BR": "Polido (~ます)", "en-US": "Polite (~ます)", "ja": "丁寧形" },
+      "color": "#2ECC71"
+    },
+    "adj_i": {
+      "label": { "pt-BR": "Adjetivo い", "en-US": "い-Adjective", "ja": "い形容詞" },
+      "color": "#E67E22"
+    },
+    "adj_na": {
+      "label": { "pt-BR": "Adjetivo な", "en-US": "な-Adjective", "ja": "な形容詞" },
+      "color": "#F39C12"
+    }
+  },
+
+  "particles": {
+    "は": {
+      "category": "topic",
+      "tooltip": {
+        "pt-BR": "Tópico: quanto a… (wa)",
+        "en-US": "Topic marker: as for… (wa)",
+        "ja": "主題を示す助詞 (は)"
+      }
+    },
+    "が": {
+      "category": "subject",
+      "tooltip": {
+        "pt-BR": "Sujeito / Novidade: foi esse que fez (ga)",
+        "en-US": "Subject / Emphasis: the one who did (ga)",
+        "ja": "主語を示す助詞 (が)"
+      }
+    },
+    "に": {
+      "category": "target",
+      "tooltip": {
+        "pt-BR": "Alvo / Tempo / Lugar: em, a, para (ni)",
+        "en-US": "Target / Time / Place: in, at, to (ni)",
+        "ja": "対象・時・場所を示す助詞 (に)"
+      }
+    },
+    "で": {
+      "category": "means",
+      "tooltip": {
+        "pt-BR": "Local da ação / Meio: em, com (de)",
+        "en-US": "Location / Means: at, by, with (de)",
+        "ja": "場所・手段を示す助詞 (で)"
+      }
+    },
+    "を": {
+      "category": "object",
+      "tooltip": {
+        "pt-BR": "Objeto Direto: sofre a ação (wo)",
+        "en-US": "Direct Object: receives the action (wo)",
+        "ja": "直接目的語を示す助詞 (を)"
+      }
+    },
+    "と": {
+      "category": "conjunction",
+      "tooltip": {
+        "pt-BR": "E / Com / Citação (to)",
+        "en-US": "And / With / Quotation (to)",
+        "ja": "並列・引用の助詞 (と)"
+      }
+    },
+    "も": {
+      "category": "also",
+      "tooltip": {
+        "pt-BR": "Também / Nem (mo)",
+        "en-US": "Also / Neither (mo)",
+        "ja": "も — 「〜も」"
+      }
+    },
+    "へ": {
+      "category": "target",
+      "tooltip": {
+        "pt-BR": "Direção: para (e)",
+        "en-US": "Direction: towards (e)",
+        "ja": "方向を示す助詞 (へ)"
+      }
+    },
+    "から": {
+      "category": "target",
+      "tooltip": {
+        "pt-BR": "Origem: de, desde (kara)",
+        "en-US": "Origin: from, since (kara)",
+        "ja": "起点を示す助詞 (から)"
+      }
+    },
+    "まで": {
+      "category": "target",
+      "tooltip": {
+        "pt-BR": "Limite: até (made)",
+        "en-US": "Limit: until, up to (made)",
+        "ja": "限界を示す助詞 (まで)"
+      }
+    },
+    "より": {
+      "category": "target",
+      "tooltip": {
+        "pt-BR": "Comparação: mais que (yori)",
+        "en-US": "Comparison: more than (yori)",
+        "ja": "比較を示す助詞 (より)"
+      }
+    },
+    "の": {
+      "category": "possessive",
+      "tooltip": {
+        "pt-BR": "Posse / Conexão: de (no)",
+        "en-US": "Possessive / Connection: of (no)",
+        "ja": "所有・接続の助詞 (の)"
+      }
+    }
+  },
+
+  "finalParticles": {
+    "surfaces": ["ね", "よ", "ぞ", "ぜ", "わ", "な", "さ"],
+    "category": "final_particle",
+    "multiWord": {
+      "かな": {
+        "tooltip": {
+          "pt-BR": "Será? (kana)",
+          "en-US": "I wonder? (kana)",
+          "ja": "疑問・推量 (かな)"
+        }
+      },
+      "かしら": {
+        "tooltip": {
+          "pt-BR": "Será que…? (kashira)",
+          "en-US": "I wonder if…? (kashira)",
+          "ja": "疑問・推量 (かしら)"
+        }
+      }
+    }
+  },
+
+  "conditionals": {
+    "ば": {
+      "category": "conditional",
+      "tooltip": {
+        "pt-BR": "Se / Quando (ba)",
+        "en-US": "If / When (ba)",
+        "ja": "条件を示す (ば)"
+      }
+    },
+    "たら": {
+      "category": "conditional",
+      "tooltip": {
+        "pt-BR": "Se / Quando (tara)",
+        "en-US": "If / When (tara)",
+        "ja": "条件を示す (たら)"
+      }
+    },
+    "なら": {
+      "category": "conditional",
+      "tooltip": {
+        "pt-BR": "Se / Quando (nara)",
+        "en-US": "If / When (nara)",
+        "ja": "条件を示す (なら)"
+      }
+    }
+  },
+
+  "quotes": {
+    "って": {
+      "category": "quote",
+      "tooltip": {
+        "pt-BR": "Citação informal / Tópico (tte)",
+        "en-US": "Informal quote / Topic (tte)",
+        "ja": "引用・話題 (って)"
+      }
+    }
+  },
+
+  "auxiliaryCompounds": {
+    "teForm": {
+      "triggers": ["て", "で"],
+      "triggerPOS": "助詞",
+      "triggerPOSDetail": "接続助詞",
+      "nextPOS": "動詞",
+      "nextPOSDetail": "非自立",
+      "category": "auxiliary",
+      "verbs": {
+        "いる": {
+          "tooltip": {
+            "pt-BR": "Ação contínua / Estado (te iru)",
+            "en-US": "Ongoing action / State (te iru)",
+            "ja": "継続・状態 (ている)"
+          }
+        },
+        "る": {
+          "tooltip": {
+            "pt-BR": "Ação contínua / Estado (teru — coloquial)",
+            "en-US": "Ongoing action / State (teru — colloquial)",
+            "ja": "継続・状態 (てる — 口語)"
+          }
+        },
+        "ある": {
+          "tooltip": {
+            "pt-BR": "Estado deixado por alguém (te aru)",
+            "en-US": "Resultant state (te aru)",
+            "ja": "結果の状態 (てある)"
+          }
+        },
+        "おく": {
+          "tooltip": {
+            "pt-BR": "Deixar feito / Preparação (te oku)",
+            "en-US": "Do in advance / Preparation (te oku)",
+            "ja": "準備・放置 (ておく)"
+          }
+        },
+        "しまう": {
+          "tooltip": {
+            "pt-BR": "Concluiu / Arrependimento (te shimau)",
+            "en-US": "Completed / Regret (te shimau)",
+            "ja": "完了・残念 (てしまう)"
+          }
+        },
+        "みる": {
+          "tooltip": {
+            "pt-BR": "Experimentar / Tentar (te miru)",
+            "en-US": "Try doing (te miru)",
+            "ja": "試行 (てみる)"
+          }
+        },
+        "くる": {
+          "tooltip": {
+            "pt-BR": "Vem fazendo (te kuru)",
+            "en-US": "Has been doing (te kuru)",
+            "ja": "変化の方向 (てくる)"
+          }
+        },
+        "いく": {
+          "tooltip": {
+            "pt-BR": "Vai fazendo (te iku)",
+            "en-US": "Goes on doing (te iku)",
+            "ja": "変化の方向 (ていく)"
+          }
+        }
+      }
+    }
+  },
+
+  "colloquials": {
+    "ちゃう": {
+      "category": "auxiliary",
+      "tooltip": {
+        "pt-BR": "Concluiu / Arrependimento (chau — coloquial)",
+        "en-US": "Completed / Regret (chau — colloquial)",
+        "ja": "完了・残念 (ちゃう — 口語)"
+      }
+    },
+    "ちゃった": {
+      "category": "auxiliary",
+      "tooltip": {
+        "pt-BR": "Concluiu / Arrependimento passado (chatta)",
+        "en-US": "Completed / Regret — past (chatta)",
+        "ja": "完了・残念・過去 (ちゃった)"
+      }
+    },
+    "とく": {
+      "category": "auxiliary",
+      "tooltip": {
+        "pt-BR": "Deixar feito / Preparação (toku — coloquial)",
+        "en-US": "Do in advance (toku — colloquial)",
+        "ja": "準備 (とく — 口語)"
+      }
+    },
+    "てる": {
+      "category": "auxiliary",
+      "tooltip": {
+        "pt-BR": "Ação contínua (teru — coloquial)",
+        "en-US": "Ongoing action (teru — colloquial)",
+        "ja": "継続 (てる — 口語)"
+      }
+    },
+    "でる": {
+      "category": "auxiliary",
+      "tooltip": {
+        "pt-BR": "Ação contínua (deru — coloquial, após ん)",
+        "en-US": "Ongoing action (deru — colloquial, after ん)",
+        "ja": "継続 (でる — 口語、ん後)"
+      }
+    }
+  },
+
+  "auxiliaryVerbal": {
+    "たら": {
+      "category": "conditional",
+      "matchField": "surface_form",
+      "altMatchField": "basic_form",
+      "tooltip": {
+        "pt-BR": "Se / Quando (tara)",
+        "en-US": "If / When (tara)",
+        "ja": "条件 (たら)"
+      }
+    },
+    "なら": {
+      "category": "conditional",
+      "matchField": "surface_form",
+      "tooltip": {
+        "pt-BR": "Se / Quando (nara)",
+        "en-US": "If / When (nara)",
+        "ja": "条件 (なら)"
+      }
+    }
+  },
+
+  "verbForms": {
+    "た": {
+      "pos": "助動詞",
+      "matchField": "basic_form",
+      "matchValue": "た",
+      "category": "verb_past",
+      "tooltip": {
+        "pt-BR": "Passado: ação concluída (~た)",
+        "en-US": "Past tense: completed action (~た)",
+        "ja": "過去形 (~た)"
+      }
+    },
+    "だ_past": {
+      "pos": "助動詞",
+      "matchField": "basic_form",
+      "matchValue": "だ",
+      "surfaceExclude": ["な", "なら"],
+      "category": "verb_past",
+      "tooltip": {
+        "pt-BR": "Passado / Cópula (~だ)",
+        "en-US": "Past / Copula (~だ)",
+        "ja": "過去・断定 (~だ)"
+      }
+    },
+    "ない": {
+      "pos": "助動詞",
+      "matchField": "basic_form",
+      "matchValue": "ない",
+      "category": "verb_negative",
+      "tooltip": {
+        "pt-BR": "Negativo: não… (~ない)",
+        "en-US": "Negative: not… (~ない)",
+        "ja": "否定形 (~ない)"
+      }
+    },
+    "ぬ": {
+      "pos": "助動詞",
+      "matchField": "basic_form",
+      "matchValue": "ぬ",
+      "category": "verb_negative",
+      "tooltip": {
+        "pt-BR": "Negativo arcaico / literário (~ぬ/ん)",
+        "en-US": "Archaic / literary negative (~ぬ/ん)",
+        "ja": "否定 — 文語 (~ぬ/ん)"
+      }
+    },
+    "ます": {
+      "pos": "助動詞",
+      "matchField": "basic_form",
+      "matchValue": "ます",
+      "category": "verb_polite",
+      "tooltip": {
+        "pt-BR": "Polido: forma educada (~ます)",
+        "en-US": "Polite: formal speech (~ます)",
+        "ja": "丁寧形 (~ます)"
+      }
+    },
+    "です": {
+      "pos": "助動詞",
+      "matchField": "basic_form",
+      "matchValue": "です",
+      "category": "verb_polite",
+      "tooltip": {
+        "pt-BR": "Cópula polida: é / ser (~です)",
+        "en-US": "Polite copula: is (~です)",
+        "ja": "丁寧の断定 (~です)"
+      }
+    },
+    "う": {
+      "pos": "助動詞",
+      "matchField": "basic_form",
+      "matchValue": "う",
+      "category": "verb_volitional",
+      "tooltip": {
+        "pt-BR": "Volitivo: vamos… / vou… (~おう)",
+        "en-US": "Volitional: let's… / I'll… (~おう)",
+        "ja": "意志形 (~おう)"
+      }
+    },
+    "よう": {
+      "pos": "助動詞",
+      "matchField": "basic_form",
+      "matchValue": "よう",
+      "category": "verb_volitional",
+      "tooltip": {
+        "pt-BR": "Volitivo: vamos… / vou… (~よう)",
+        "en-US": "Volitional: let's… / I'll… (~よう)",
+        "ja": "意志形 (~よう)"
+      }
+    }
+  },
+
+  "verbConjugations": {
+    "imperative": {
+      "pos": "動詞",
+      "conjugatedFormMatch": "命令",
+      "category": "verb_imperative",
+      "tooltip": {
+        "pt-BR": "Imperativo: ordem direta!",
+        "en-US": "Imperative: direct command!",
+        "ja": "命令形！"
+      }
+    }
+  },
+
+  "teFormParticle": {
+    "surfaces": ["て", "で"],
+    "pos": "助詞",
+    "posDetail": "接続助詞",
+    "category": "verb_te",
+    "skipIfNextIsAuxiliary": true,
+    "tooltip": {
+      "pt-BR": "Forma て: liga frases / 'e então…'",
+      "en-US": "て-form: links clauses / 'and then…'",
+      "ja": "て形：文を繋げる"
+    }
+  },
+
+  "adjectives": {
+    "i_adjective": {
+      "pos": "形容詞",
+      "posDetail": "自立",
+      "category": "adj_i",
+      "tooltip": {
+        "pt-BR": "Adjetivo い: descrição direta",
+        "en-US": "い-Adjective: direct description",
+        "ja": "い形容詞"
+      }
+    },
+    "na_adjective": {
+      "pos": "名詞",
+      "posDetail": "形容動詞語幹",
+      "category": "adj_na",
+      "tooltip": {
+        "pt-BR": "Adjetivo な: precisa de な antes do substantivo",
+        "en-US": "な-Adjective: requires な before nouns",
+        "ja": "な形容詞（形容動詞語幹）"
+      }
+    }
+  },
+
+  "legend": [
+    { "category": "topic",           "sample": "は" },
+    { "category": "subject",         "sample": "が" },
+    { "category": "target",          "sample": "に" },
+    { "category": "means",           "sample": "で" },
+    { "category": "object",          "sample": "を" },
+    { "category": "conjunction",     "sample": "と" },
+    { "category": "also",            "sample": "も" },
+    { "category": "possessive",      "sample": "の" },
+    { "category": "auxiliary",       "sample": null },
+    { "category": "final_particle",  "sample": null },
+    { "category": "conditional",     "sample": "ば" },
+    { "category": "quote",           "sample": "って" },
+    { "category": "verb_te",         "sample": "て" },
+    { "category": "verb_past",       "sample": "た" },
+    { "category": "verb_negative",   "sample": "ない" },
+    { "category": "verb_volitional", "sample": "よう" },
+    { "category": "verb_imperative", "sample": "ろ/え" },
+    { "category": "verb_polite",     "sample": "ます" },
+    { "category": "adj_i",           "sample": "い" },
+    { "category": "adj_na",          "sample": "な" }
+  ]
+}

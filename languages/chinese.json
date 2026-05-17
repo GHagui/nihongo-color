@@ -1,0 +1,354 @@
+{
+  "id": "chinese",
+  "version": "1.0.0",
+  "engine": "regex",
+
+  "categories": {
+    "structural": {
+      "label": { "pt-BR": "Partícula Estrutural", "en-US": "Structural Particle", "zh": "结构助词" },
+      "color": "#C0392B"
+    },
+    "aspect": {
+      "label": { "pt-BR": "Aspecto Verbal", "en-US": "Verbal Aspect", "zh": "动态助词" },
+      "color": "#D35400"
+    },
+    "modal": {
+      "label": { "pt-BR": "Modal / Final", "en-US": "Modal / Final", "zh": "语气助词" },
+      "color": "#E67E22"
+    },
+    "measure": {
+      "label": { "pt-BR": "Classificadores", "en-US": "Measure Words", "zh": "量词" },
+      "color": "#2980B9"
+    },
+    "conjunction": {
+      "label": { "pt-BR": "Conjunções", "en-US": "Conjunctions", "zh": "连词" },
+      "color": "#16A085"
+    },
+    "preposition": {
+      "label": { "pt-BR": "Preposições", "en-US": "Prepositions", "zh": "介词" },
+      "color": "#27AE60"
+    },
+    "adverb": {
+      "label": { "pt-BR": "Advérbios Gramaticais", "en-US": "Grammar Adverbs", "zh": "副词" },
+      "color": "#8E44AD"
+    },
+    "complement": {
+      "label": { "pt-BR": "Complemento", "en-US": "Complement", "zh": "补语标记" },
+      "color": "#9B59B6"
+    }
+  },
+
+  "particles": {
+    "的": {
+      "category": "structural",
+      "tooltip": {
+        "pt-BR": "Posse / Modificador: de (de)",
+        "en-US": "Possessive / Modifier: 's, of (de)",
+        "zh": "结构助词：修饰・所有 (的)"
+      }
+    },
+    "地": {
+      "category": "structural",
+      "tooltip": {
+        "pt-BR": "Modifica verbo (advérbio → verbo)",
+        "en-US": "Adverbial modifier (adverb → verb)",
+        "zh": "状语标记 (地)"
+      }
+    },
+    "得": {
+      "category": "complement",
+      "tooltip": {
+        "pt-BR": "Complemento de grau / resultado",
+        "en-US": "Degree / Result complement marker",
+        "zh": "补语标记 (得)"
+      }
+    },
+    "了": {
+      "category": "aspect",
+      "tooltip": {
+        "pt-BR": "Ação concluída / Mudança de estado",
+        "en-US": "Completed action / Change of state",
+        "zh": "动态助词：完成 (了)"
+      }
+    },
+    "过": {
+      "category": "aspect",
+      "tooltip": {
+        "pt-BR": "Experiência passada: já…",
+        "en-US": "Past experience: have done…",
+        "zh": "动态助词：经验 (过)"
+      }
+    },
+    "着": {
+      "category": "aspect",
+      "tooltip": {
+        "pt-BR": "Ação contínua / Estado",
+        "en-US": "Ongoing action / State",
+        "zh": "动态助词：进行・持续 (着)"
+      }
+    },
+    "吗": {
+      "category": "modal",
+      "tooltip": {
+        "pt-BR": "Pergunta sim/não",
+        "en-US": "Yes/No question marker",
+        "zh": "语气助词：疑问 (吗)"
+      }
+    },
+    "吧": {
+      "category": "modal",
+      "tooltip": {
+        "pt-BR": "Sugestão / Suposição",
+        "en-US": "Suggestion / Assumption",
+        "zh": "语气助词：建议・推测 (吧)"
+      }
+    },
+    "呢": {
+      "category": "modal",
+      "tooltip": {
+        "pt-BR": "E quanto a…? / Continuação",
+        "en-US": "How about…? / Continuation",
+        "zh": "语气助词：疑问・持续 (呢)"
+      }
+    },
+    "啊": {
+      "category": "modal",
+      "tooltip": {
+        "pt-BR": "Exclamação / Ênfase",
+        "en-US": "Exclamation / Emphasis",
+        "zh": "语气助词：感叹 (啊)"
+      }
+    },
+    "在": {
+      "category": "preposition",
+      "tooltip": {
+        "pt-BR": "Em / Estar fazendo (zài)",
+        "en-US": "At / In / -ing (zài)",
+        "zh": "介词：在 — 进行・位置"
+      }
+    },
+    "把": {
+      "category": "preposition",
+      "tooltip": {
+        "pt-BR": "Move o objeto antes do verbo (bǎ)",
+        "en-US": "Object-fronting marker (bǎ)",
+        "zh": "介词：把 — 处置"
+      }
+    },
+    "被": {
+      "category": "preposition",
+      "tooltip": {
+        "pt-BR": "Voz passiva (bèi)",
+        "en-US": "Passive voice marker (bèi)",
+        "zh": "介词：被 — 被动"
+      }
+    },
+    "从": {
+      "category": "preposition",
+      "tooltip": {
+        "pt-BR": "De / Desde (cóng)",
+        "en-US": "From / Since (cóng)",
+        "zh": "介词：从 — 起点"
+      }
+    },
+    "到": {
+      "category": "preposition",
+      "tooltip": {
+        "pt-BR": "Até / Para (dào)",
+        "en-US": "To / Until (dào)",
+        "zh": "介词：到 — 终点"
+      }
+    },
+    "和": {
+      "category": "conjunction",
+      "tooltip": {
+        "pt-BR": "E / Com (hé)",
+        "en-US": "And / With (hé)",
+        "zh": "连词：和"
+      }
+    },
+    "但是": {
+      "category": "conjunction",
+      "tooltip": {
+        "pt-BR": "Mas / Porém (dànshì)",
+        "en-US": "But / However (dànshì)",
+        "zh": "连词：但是"
+      }
+    },
+    "因为": {
+      "category": "conjunction",
+      "tooltip": {
+        "pt-BR": "Porque (yīnwèi)",
+        "en-US": "Because (yīnwèi)",
+        "zh": "连词：因为"
+      }
+    },
+    "所以": {
+      "category": "conjunction",
+      "tooltip": {
+        "pt-BR": "Por isso / Então (suǒyǐ)",
+        "en-US": "Therefore / So (suǒyǐ)",
+        "zh": "连词：所以"
+      }
+    },
+    "虽然": {
+      "category": "conjunction",
+      "tooltip": {
+        "pt-BR": "Embora / Apesar de (suīrán)",
+        "en-US": "Although (suīrán)",
+        "zh": "连词：虽然"
+      }
+    },
+    "不": {
+      "category": "adverb",
+      "tooltip": {
+        "pt-BR": "Negação: não (bù)",
+        "en-US": "Negation: not (bù)",
+        "zh": "副词：不 — 否定"
+      }
+    },
+    "没": {
+      "category": "adverb",
+      "tooltip": {
+        "pt-BR": "Não (passado) / Não tem (méi)",
+        "en-US": "Not (past) / Don't have (méi)",
+        "zh": "副词：没 — 否定（过去）"
+      }
+    },
+    "都": {
+      "category": "adverb",
+      "tooltip": {
+        "pt-BR": "Todos / Já (dōu)",
+        "en-US": "All / Already (dōu)",
+        "zh": "副词：都 — 范围"
+      }
+    },
+    "也": {
+      "category": "adverb",
+      "tooltip": {
+        "pt-BR": "Também (yě)",
+        "en-US": "Also (yě)",
+        "zh": "副词：也"
+      }
+    },
+    "就": {
+      "category": "adverb",
+      "tooltip": {
+        "pt-BR": "Então / Logo / Já (jiù)",
+        "en-US": "Then / Right away (jiù)",
+        "zh": "副词：就 — 顺接・强调"
+      }
+    },
+    "才": {
+      "category": "adverb",
+      "tooltip": {
+        "pt-BR": "Só então / Apenas (cái)",
+        "en-US": "Only then / Just (cái)",
+        "zh": "副词：才 — 限定"
+      }
+    }
+  },
+
+  "regexRules": [
+    {
+      "id": "particle_de",
+      "pattern": "的",
+      "category": "structural",
+      "tooltipKey": "的"
+    },
+    {
+      "id": "particle_di",
+      "pattern": "地",
+      "category": "structural",
+      "tooltipKey": "地"
+    },
+    {
+      "id": "complement_de",
+      "pattern": "得",
+      "category": "complement",
+      "tooltipKey": "得"
+    },
+    {
+      "id": "aspect_le",
+      "pattern": "了",
+      "category": "aspect",
+      "tooltipKey": "了"
+    },
+    {
+      "id": "aspect_guo",
+      "pattern": "过",
+      "category": "aspect",
+      "tooltipKey": "过"
+    },
+    {
+      "id": "aspect_zhe",
+      "pattern": "着",
+      "category": "aspect",
+      "tooltipKey": "着"
+    },
+    {
+      "id": "modal_ma",
+      "pattern": "吗(?=[？?。！!\\s]|$)",
+      "category": "modal",
+      "tooltipKey": "吗"
+    },
+    {
+      "id": "modal_ba",
+      "pattern": "吧(?=[。！!\\s]|$)",
+      "category": "modal",
+      "tooltipKey": "吧"
+    },
+    {
+      "id": "modal_ne",
+      "pattern": "呢(?=[？?。！!\\s]|$)",
+      "category": "modal",
+      "tooltipKey": "呢"
+    },
+    {
+      "id": "conj_danshi",
+      "pattern": "但是",
+      "category": "conjunction",
+      "tooltipKey": "但是"
+    },
+    {
+      "id": "conj_yinwei",
+      "pattern": "因为",
+      "category": "conjunction",
+      "tooltipKey": "因为"
+    },
+    {
+      "id": "conj_suoyi",
+      "pattern": "所以",
+      "category": "conjunction",
+      "tooltipKey": "所以"
+    },
+    {
+      "id": "conj_suiran",
+      "pattern": "虽然",
+      "category": "conjunction",
+      "tooltipKey": "虽然"
+    },
+    {
+      "id": "prep_bei",
+      "pattern": "被",
+      "category": "preposition",
+      "tooltipKey": "被"
+    },
+    {
+      "id": "prep_ba",
+      "pattern": "把",
+      "category": "preposition",
+      "tooltipKey": "把"
+    }
+  ],
+
+  "legend": [
+    { "category": "structural",   "sample": "的/地" },
+    { "category": "aspect",       "sample": "了/过/着" },
+    { "category": "modal",        "sample": "吗/吧/呢" },
+    { "category": "preposition",  "sample": "在/把/被" },
+    { "category": "conjunction",  "sample": "和/但是" },
+    { "category": "adverb",       "sample": "不/没/都" },
+    { "category": "complement",   "sample": "得" }
+  ]
+}

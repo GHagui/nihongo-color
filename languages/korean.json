@@ -1,0 +1,271 @@
+{
+  "id": "korean",
+  "version": "1.0.0",
+  "engine": "regex",
+
+  "categories": {
+    "topic": {
+      "label": { "pt-BR": "Tópico", "en-US": "Topic", "ko": "주제" },
+      "color": "#C0392B"
+    },
+    "subject": {
+      "label": { "pt-BR": "Sujeito", "en-US": "Subject", "ko": "주어" },
+      "color": "#D35400"
+    },
+    "object": {
+      "label": { "pt-BR": "Objeto Direto", "en-US": "Direct Object", "ko": "목적어" },
+      "color": "#8E44AD"
+    },
+    "target": {
+      "label": { "pt-BR": "Direção / Lugar", "en-US": "Direction / Place", "ko": "방향・장소" },
+      "color": "#27AE60"
+    },
+    "means": {
+      "label": { "pt-BR": "Meio / Instrumento", "en-US": "Means / Instrument", "ko": "수단・도구" },
+      "color": "#2980B9"
+    },
+    "conjunction": {
+      "label": { "pt-BR": "E / Com", "en-US": "And / With", "ko": "접속" },
+      "color": "#16A085"
+    },
+    "possessive": {
+      "label": { "pt-BR": "Posse", "en-US": "Possessive", "ko": "소유" },
+      "color": "#1ABC9C"
+    },
+    "sentence_ending": {
+      "label": { "pt-BR": "Final de frase", "en-US": "Sentence Ending", "ko": "종결어미" },
+      "color": "#E67E22"
+    },
+    "connective": {
+      "label": { "pt-BR": "Conectivo", "en-US": "Connective Ending", "ko": "연결어미" },
+      "color": "#9B59B6"
+    },
+    "honorific": {
+      "label": { "pt-BR": "Honorífico", "en-US": "Honorific", "ko": "높임말" },
+      "color": "#2C3E50"
+    }
+  },
+
+  "particles": {
+    "은": {
+      "category": "topic",
+      "tooltip": {
+        "pt-BR": "Tópico: quanto a… (após consoante)",
+        "en-US": "Topic marker (after consonant)",
+        "ko": "주제 조사 (받침 뒤)"
+      }
+    },
+    "는": {
+      "category": "topic",
+      "tooltip": {
+        "pt-BR": "Tópico: quanto a… (após vogal)",
+        "en-US": "Topic marker (after vowel)",
+        "ko": "주제 조사 (모음 뒤)"
+      }
+    },
+    "이": {
+      "category": "subject",
+      "tooltip": {
+        "pt-BR": "Sujeito (após consoante)",
+        "en-US": "Subject marker (after consonant)",
+        "ko": "주격 조사 (받침 뒤)"
+      }
+    },
+    "가": {
+      "category": "subject",
+      "tooltip": {
+        "pt-BR": "Sujeito (após vogal)",
+        "en-US": "Subject marker (after vowel)",
+        "ko": "주격 조사 (모음 뒤)"
+      }
+    },
+    "을": {
+      "category": "object",
+      "tooltip": {
+        "pt-BR": "Objeto direto (após consoante)",
+        "en-US": "Object marker (after consonant)",
+        "ko": "목적격 조사 (받침 뒤)"
+      }
+    },
+    "를": {
+      "category": "object",
+      "tooltip": {
+        "pt-BR": "Objeto direto (após vogal)",
+        "en-US": "Object marker (after vowel)",
+        "ko": "목적격 조사 (모음 뒤)"
+      }
+    },
+    "에": {
+      "category": "target",
+      "tooltip": {
+        "pt-BR": "Lugar / Tempo: em, a (e)",
+        "en-US": "Place / Time: at, in, to (e)",
+        "ko": "장소・시간 조사 (에)"
+      }
+    },
+    "에서": {
+      "category": "means",
+      "tooltip": {
+        "pt-BR": "Local da ação / Origem: em, de (eseo)",
+        "en-US": "Action location / Source: at, from (eseo)",
+        "ko": "장소(활동)・출발점 조사 (에서)"
+      }
+    },
+    "로": {
+      "category": "target",
+      "tooltip": {
+        "pt-BR": "Direção / Meio: por, com (ro)",
+        "en-US": "Direction / Means: by, with (ro)",
+        "ko": "방향・수단 조사 (로)"
+      }
+    },
+    "으로": {
+      "category": "target",
+      "tooltip": {
+        "pt-BR": "Direção / Meio: por, com (euro — após consoante)",
+        "en-US": "Direction / Means (euro — after consonant)",
+        "ko": "방향・수단 조사 (으로 — 받침 뒤)"
+      }
+    },
+    "와": {
+      "category": "conjunction",
+      "tooltip": {
+        "pt-BR": "E / Com (wa — após vogal)",
+        "en-US": "And / With (wa — after vowel)",
+        "ko": "접속 조사 (와 — 모음 뒤)"
+      }
+    },
+    "과": {
+      "category": "conjunction",
+      "tooltip": {
+        "pt-BR": "E / Com (gwa — após consoante)",
+        "en-US": "And / With (gwa — after consonant)",
+        "ko": "접속 조사 (과 — 받침 뒤)"
+      }
+    },
+    "의": {
+      "category": "possessive",
+      "tooltip": {
+        "pt-BR": "Posse: de (ui)",
+        "en-US": "Possessive: of (ui)",
+        "ko": "소유 조사 (의)"
+      }
+    },
+    "도": {
+      "category": "conjunction",
+      "tooltip": {
+        "pt-BR": "Também / Nem (do)",
+        "en-US": "Also / Neither (do)",
+        "ko": "보조사 (도)"
+      }
+    },
+    "부터": {
+      "category": "target",
+      "tooltip": {
+        "pt-BR": "Desde / A partir de (buteo)",
+        "en-US": "From / Since (buteo)",
+        "ko": "시작점 조사 (부터)"
+      }
+    },
+    "까지": {
+      "category": "target",
+      "tooltip": {
+        "pt-BR": "Até (kkaji)",
+        "en-US": "Until / Up to (kkaji)",
+        "ko": "한계점 조사 (까지)"
+      }
+    },
+    "한테": {
+      "category": "target",
+      "tooltip": {
+        "pt-BR": "Para / De (pessoa — informal)",
+        "en-US": "To / From (person — informal)",
+        "ko": "대상 조사 — 구어 (한테)"
+      }
+    },
+    "에게": {
+      "category": "target",
+      "tooltip": {
+        "pt-BR": "Para / De (pessoa — formal)",
+        "en-US": "To / From (person — formal)",
+        "ko": "대상 조사 — 문어 (에게)"
+      }
+    }
+  },
+
+  "regexRules": [
+    {
+      "id": "particle_topic_eun",
+      "pattern": "(?<=[가-힣])은(?=\\s|[가-힣]|$)",
+      "category": "topic",
+      "tooltipKey": "은"
+    },
+    {
+      "id": "particle_topic_neun",
+      "pattern": "(?<=[가-힣])는(?=\\s|[가-힣]|$)",
+      "category": "topic",
+      "tooltipKey": "는"
+    },
+    {
+      "id": "particle_subject_i",
+      "pattern": "(?<=[가-힣])이(?=\\s|[가-힣]|$)",
+      "category": "subject",
+      "tooltipKey": "이"
+    },
+    {
+      "id": "particle_subject_ga",
+      "pattern": "(?<=[가-힣])가(?=\\s|[가-힣]|$)",
+      "category": "subject",
+      "tooltipKey": "가"
+    },
+    {
+      "id": "particle_object_eul",
+      "pattern": "(?<=[가-힣])을(?=\\s|[가-힣]|$)",
+      "category": "object",
+      "tooltipKey": "을"
+    },
+    {
+      "id": "particle_object_reul",
+      "pattern": "(?<=[가-힣])를(?=\\s|[가-힣]|$)",
+      "category": "object",
+      "tooltipKey": "를"
+    },
+    {
+      "id": "particle_place_e",
+      "pattern": "(?<=[가-힣])에(?=\\s|서|[가-힣]|$)",
+      "category": "target",
+      "tooltipKey": "에"
+    },
+    {
+      "id": "particle_eseo",
+      "pattern": "(?<=[가-힣])에서(?=\\s|[가-힣]|$)",
+      "category": "means",
+      "tooltipKey": "에서"
+    },
+    {
+      "id": "particle_possessive",
+      "pattern": "(?<=[가-힣])의(?=\\s|[가-힣]|$)",
+      "category": "possessive",
+      "tooltipKey": "의"
+    },
+    {
+      "id": "particle_do",
+      "pattern": "(?<=[가-힣])도(?=\\s|[가-힣]|$)",
+      "category": "conjunction",
+      "tooltipKey": "도"
+    }
+  ],
+
+  "legend": [
+    { "category": "topic",          "sample": "은/는" },
+    { "category": "subject",        "sample": "이/가" },
+    { "category": "object",         "sample": "을/를" },
+    { "category": "target",         "sample": "에" },
+    { "category": "means",          "sample": "에서" },
+    { "category": "conjunction",    "sample": "와/과" },
+    { "category": "possessive",     "sample": "의" },
+    { "category": "sentence_ending","sample": null },
+    { "category": "connective",     "sample": null },
+    { "category": "honorific",      "sample": null }
+  ]
+}

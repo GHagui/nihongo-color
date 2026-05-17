@@ -1,0 +1,50 @@
+{
+  "version": "1.0.0",
+  "defaultLanguage": "japanese",
+  "supportedLocales": ["pt-BR", "en-US", "ja"],
+  "defaultLocale": "pt-BR",
+  "languages": [
+    {
+      "id": "japanese",
+      "name": {
+        "native": "日本語",
+        "en-US": "Japanese",
+        "pt-BR": "Japonês"
+      },
+      "icon": "🇯🇵",
+      "engine": "kuromoji",
+      "detectRegex": "[\\u3040-\\u309F\\u30A0-\\u30FF\\u4E00-\\u9FFF]",
+      "packFile": "japanese.json",
+      "dictPath": "dict/",
+      "enabled": true
+    },
+    {
+      "id": "korean",
+      "name": {
+        "native": "한국어",
+        "en-US": "Korean",
+        "pt-BR": "Coreano"
+      },
+      "icon": "🇰🇷",
+      "engine": "regex",
+      "detectRegex": "[\\uAC00-\\uD7AF\\u1100-\\u11FF\\u3130-\\u318F]",
+      "packFile": "korean.json",
+      "dictPath": null,
+      "enabled": true
+    },
+    {
+      "id": "chinese",
+      "name": {
+        "native": "中文",
+        "en-US": "Chinese",
+        "pt-BR": "Chinês"
+      },
+      "icon": "🇨🇳",
+      "engine": "regex",
+      "detectRegex": "[\\u4E00-\\u9FFF\\u3400-\\u4DBF]",
+      "packFile": "chinese.json",
+      "dictPath": null,
+      "enabled": true
+    }
+  ]
+}

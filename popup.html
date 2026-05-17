@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>日本語カラー</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      width: 380px;
+      font-family: 'Segoe UI', 'Noto Sans JP', system-ui, sans-serif;
+      background: linear-gradient(145deg, #0f0c29, #302b63, #24243e);
+      color: #e0e0e0;
+      overflow: hidden;
+    }
+
+    /* ── Header ───────────────────────────────────── */
+    .header {
+      background: rgba(255, 255, 255, 0.04);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 18px 20px 14px;
+      text-align: center;
+    }
+
+    .header h1 {
+      font-size: 20px;
+      font-weight: 700;
+      background: linear-gradient(135deg, #f39c12, #e74c3c, #9b59b6);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      letter-spacing: 1px;
+    }
+
+    .header p {
+      font-size: 11px;
+      color: #8e8ea0;
+      margin-top: 4px;
+      letter-spacing: 0.3px;
+    }
+
+    .badge {
+      display: inline-block;
+      margin-top: 6px;
+      padding: 2px 8px;
+      font-size: 9px;
+      font-weight: 600;
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+      background: linear-gradient(135deg, #2ecc71, #27ae60);
+      color: #fff;
+      border-radius: 20px;
+    }
+
+    /* ── Content ──────────────────────────────────── */
+    .content { padding: 16px 20px; }
+
+    /* ── Status ───────────────────────────────────── */
+    .status-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin-bottom: 14px;
+      padding: 10px 14px;
+      background: rgba(255, 255, 255, 0.04);
+      border-radius: 10px;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .status-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #555;
+      transition: background 0.4s ease, box-shadow 0.4s ease;
+    }
+    .status-dot.active {
+      background: #2ecc71;
+      box-shadow: 0 0 8px rgba(46, 204, 113, 0.6);
+    }
+    .status-dot.loading {
+      background: #f39c12;
+      box-shadow: 0 0 8px rgba(243, 156, 18, 0.5);
+      animation: pulse 1.2s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
+    }
+
+    .status-text {
+      font-size: 13px;
+      font-weight: 500;
+      color: #aaa;
+      transition: color 0.3s;
+    }
+    .status-text.active { color: #2ecc71; }
+    .status-text.loading { color: #f39c12; }
+
+    /* ── Toggle Button ────────────────────────────── */
+    #toggleBtn {
+      display: block;
+      width: 100%;
+      padding: 13px 0;
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+      background: linear-gradient(135deg, #e74c3c, #c0392b);
+      color: #fff;
+      box-shadow: 0 4px 15px rgba(231, 76, 60, 0.3);
+      position: relative;
+      overflow: hidden;
+    }
+    #toggleBtn::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(255,255,255,0.15), transparent);
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    #toggleBtn:hover::after { opacity: 1; }
+    #toggleBtn:active { transform: scale(0.97); }
+    #toggleBtn.active {
+      background: linear-gradient(135deg, #2ecc71, #27ae60);
+      box-shadow: 0 4px 15px rgba(46, 204, 113, 0.3);
+    }
+    #toggleBtn:disabled {
+      opacity: 0.5;
+      cursor: wait;
+    }
+
+    /* ── Language Selector ─────────────────────────── */
+    .section-title {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 1.2px;
+      color: #666;
+      margin-bottom: 8px;
+      margin-top: 16px;
+      font-weight: 600;
+    }
+
+    .lang-selector {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 4px;
+    }
+
+    .lang-chip {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 500;
+      cursor: pointer;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      background: rgba(255, 255, 255, 0.04);
+      color: #999;
+      transition: all 0.25s ease;
+      user-select: none;
+    }
+    .lang-chip:hover {
+      background: rgba(255, 255, 255, 0.08);
+      color: #ccc;
+      border-color: rgba(255, 255, 255, 0.2);
+    }
+    .lang-chip.selected {
+      background: linear-gradient(135deg, rgba(231, 76, 60, 0.2), rgba(155, 89, 182, 0.2));
+      color: #fff;
+      border-color: rgba(231, 76, 60, 0.5);
+      box-shadow: 0 2px 8px rgba(231, 76, 60, 0.15);
+    }
+    .lang-chip .lang-icon {
+      font-size: 14px;
+    }
+    .lang-chip .lang-name {
+      font-size: 11.5px;
+    }
+
+    /* ── Locale Selector ───────────────────────────── */
+    .locale-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 10px;
+      margin-bottom: 4px;
+    }
+    .locale-row label {
+      font-size: 11px;
+      color: #777;
+      font-weight: 500;
+      letter-spacing: 0.5px;
+    }
+    #localeSelect {
+      flex: 1;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 8px;
+      padding: 5px 10px;
+      font-size: 12px;
+      color: #ccc;
+      cursor: pointer;
+      outline: none;
+      font-family: inherit;
+    }
+    #localeSelect:focus {
+      border-color: rgba(231, 76, 60, 0.5);
+    }
+    #localeSelect option {
+      background: #1a1a2e;
+      color: #ccc;
+    }
+
+    /* ── Legend ────────────────────────────────────── */
+    .legend {
+      margin-top: 14px;
+      padding: 12px 14px;
+      background: rgba(255, 255, 255, 0.03);
+      border-radius: 10px;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+    }
+    .legend-title {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 1.2px;
+      color: #666;
+      margin-bottom: 10px;
+      font-weight: 600;
+    }
+    .legend-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px 12px;
+    }
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11.5px;
+      color: #bbb;
+    }
+    .legend-swatch {
+      width: 10px;
+      height: 10px;
+      border-radius: 3px;
+      flex-shrink: 0;
+    }
+
+    .legend-empty {
+      color: #555;
+      font-size: 11px;
+      font-style: italic;
+      text-align: center;
+      padding: 8px 0;
+    }
+
+    /* ── Tab bar for multiple legends ──────────────── */
+    .legend-tabs {
+      display: flex;
+      gap: 4px;
+      margin-bottom: 10px;
+    }
+    .legend-tab {
+      padding: 4px 10px;
+      font-size: 11px;
+      font-weight: 500;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      background: rgba(255, 255, 255, 0.03);
+      border-radius: 6px;
+      cursor: pointer;
+      color: #777;
+      transition: all 0.2s;
+    }
+    .legend-tab:hover {
+      background: rgba(255, 255, 255, 0.06);
+      color: #aaa;
+    }
+    .legend-tab.active {
+      background: rgba(231, 76, 60, 0.15);
+      border-color: rgba(231, 76, 60, 0.3);
+      color: #e74c3c;
+    }
+
+    /* ── Footer ───────────────────────────────────── */
+    .footer {
+      text-align: center;
+      padding: 10px 20px 14px;
+      font-size: 10px;
+      color: #555;
+      border-top: 1px solid rgba(255, 255, 255, 0.04);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="header">
+    <h1>日本語カラー</h1>
+    <p>Multi-Language Grammar Highlighter</p>
+    <span class="badge">LangDB · Multi-Engine NLP</span>
+  </div>
+
+  <div class="content">
+    <div class="status-row">
+      <div class="status-dot" id="statusDot"></div>
+      <span class="status-text" id="statusText">Desativado</span>
+    </div>
+
+    <button id="toggleBtn">⚡ Ativar Cores na Página</button>
+
+    <!-- Language chips -->
+    <div class="section-title">Línguas</div>
+    <div class="lang-selector" id="langSelector">
+      <!-- Preenchido dinamicamente -->
+    </div>
+
+    <!-- Locale -->
+    <div class="locale-row">
+      <label for="localeSelect">🌐 Idioma dos tooltips:</label>
+      <select id="localeSelect">
+        <option value="pt-BR">Português (BR)</option>
+        <option value="en-US">English (US)</option>
+        <option value="ja">日本語</option>
+        <option value="ko">한국어</option>
+        <option value="zh">中文</option>
+      </select>
+    </div>
+
+    <!-- Dynamic legend -->
+    <div class="legend" id="legendSection">
+      <div class="legend-title">Legenda de Cores</div>
+      <div class="legend-tabs" id="legendTabs"></div>
+      <div class="legend-grid" id="legendGrid">
+        <div class="legend-empty">Selecione uma língua</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">v4.0 · LangDB + Kuromoji NLP · Feito com 💜</div>
+
+  <script src="popup.js"></script>
+</body>
+</html>
