@@ -83,6 +83,21 @@
     "adj_na": {
       "label": { "pt-BR": "Adjetivo な", "en-US": "な-Adjective", "ja": "な形容詞" },
       "color": "#F39C12"
+    },
+    "sov_subject": {
+      "label": { "pt-BR": "[S] Sujeito", "en-US": "[S] Subject", "ja": "[S] 主語" },
+      "color": "rgba(52, 152, 219, 0.18)",
+      "borderColor": "#3498DB"
+    },
+    "sov_object": {
+      "label": { "pt-BR": "[O] Objeto", "en-US": "[O] Object", "ja": "[O] 目的語" },
+      "color": "rgba(155, 89, 182, 0.18)",
+      "borderColor": "#9B59B6"
+    },
+    "sov_verb": {
+      "label": { "pt-BR": "[V] Verbo", "en-US": "[V] Verb", "ja": "[V] 動詞" },
+      "color": "rgba(231, 76, 60, 0.18)",
+      "borderColor": "#E74C3C"
     }
   },
 
@@ -519,7 +534,49 @@
     }
   },
 
+  "sovRoles": {
+    "subject": {
+      "triggerParticles": ["は", "が"],
+      "triggerPOS": "助詞",
+      "nounPOS": ["名詞"],
+      "nounPOSExclude": ["非自立", "接尾"],
+      "alsoIncludePOS": ["接頭詞", "連体詞"],
+      "category": "sov_subject",
+      "tooltip": {
+        "pt-BR": "[S] Sujeito — quem realiza a ação",
+        "en-US": "[S] Subject — who performs the action",
+        "ja": "[S] 主語 — 動作の主体"
+      }
+    },
+    "object": {
+      "triggerParticles": ["を"],
+      "triggerPOS": "助詞",
+      "nounPOS": ["名詞"],
+      "nounPOSExclude": ["非自立", "接尾"],
+      "alsoIncludePOS": ["接頭詞", "連体詞"],
+      "category": "sov_object",
+      "tooltip": {
+        "pt-BR": "[O] Objeto — o que sofre a ação",
+        "en-US": "[O] Object — what receives the action",
+        "ja": "[O] 目的語 — 動作の対象"
+      }
+    },
+    "verb": {
+      "pos": "動詞",
+      "posDetail": "自立",
+      "category": "sov_verb",
+      "tooltip": {
+        "pt-BR": "[V] Verbo — a ação da frase",
+        "en-US": "[V] Verb — the action of the sentence",
+        "ja": "[V] 動詞 — 文の動作"
+      }
+    }
+  },
+
   "legend": [
+    { "category": "sov_subject",     "sample": "[S]", "style": "sov" },
+    { "category": "sov_object",      "sample": "[O]", "style": "sov" },
+    { "category": "sov_verb",        "sample": "[V]", "style": "sov" },
     { "category": "topic",           "sample": "は" },
     { "category": "subject",         "sample": "が" },
     { "category": "target",          "sample": "に" },

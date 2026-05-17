@@ -28,6 +28,14 @@ For **Japanese**, it uses [Kuromoji.js](https://github.com/takuyaa/kuromoji.js) 
 
 ---
 
+## 🔥 New Features
+
+- **🎨 Full UI Customization:** Open the extension popup to instantly **toggle grammar categories** on/off or **change their colors** using the built-in color picker. Your preferences are saved automatically!
+- **🧠 Subject-Object-Verb (SOV) Engine:** A revolutionary dual-layer parser! While grammatical particles have their text colored, their corresponding Subject, Object, and Verb clauses receive an elegant **background highlight + colored border** for deeper syntactical understanding.
+- **🎬 Instant Subtitle Sync (Netflix & YouTube):** The engine detects when you are watching a video (YouTube, Netflix, Crunchyroll, Prime Video, etc.) and drops the internal analysis latency to **50ms**. Grammars are highlighted instantly the moment a subtitle appears on screen!
+
+---
+
 ## 🎯 Features
 
 ### 🇯🇵 Japanese (Kuromoji NLP Engine)
@@ -168,9 +176,9 @@ npm install
 1. **Detection** — Unicode regex identifies which languages are present in each text node
 2. **Tokenization** — Kuromoji (for Japanese) performs morphological analysis; regex rules handle other languages
 3. **Classification** — Each token is matched against the language pack's rules (particles, verb forms, adjectives, etc.)
-4. **Highlighting** — The CSS Custom Highlight API applies colors without modifying the DOM
+4. **Highlighting** — The CSS Custom Highlight API applies colors without modifying the DOM (Dual-layer: text color for grammar, background+border for SOV structures)
 5. **Tooltip** — `mousemove` listener finds highlighted ranges and shows localized tooltips
-6. **Dynamic content** — `MutationObserver` + SPA navigation detection ensures new content is processed automatically
+6. **Dynamic content** — `MutationObserver` + SPA navigation detection ensures new content is processed automatically (with custom 50ms ultra-low latency specifically mapped for video streaming platforms)
 
 ---
 

@@ -1,11 +1,16 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>日本語カラー</title>
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
     body {
       width: 380px;
@@ -28,6 +33,7 @@
       font-size: 20px;
       font-weight: 700;
       background: linear-gradient(135deg, #f39c12, #e74c3c, #9b59b6);
+      background-clip: text;
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       letter-spacing: 1px;
@@ -54,7 +60,9 @@
     }
 
     /* ── Content ──────────────────────────────────── */
-    .content { padding: 16px 20px; }
+    .content {
+      padding: 16px 20px;
+    }
 
     /* ── Status ───────────────────────────────────── */
     .status-row {
@@ -76,10 +84,12 @@
       background: #555;
       transition: background 0.4s ease, box-shadow 0.4s ease;
     }
+
     .status-dot.active {
       background: #2ecc71;
       box-shadow: 0 0 8px rgba(46, 204, 113, 0.6);
     }
+
     .status-dot.loading {
       background: #f39c12;
       box-shadow: 0 0 8px rgba(243, 156, 18, 0.5);
@@ -87,8 +97,15 @@
     }
 
     @keyframes pulse {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.4; }
+
+      0%,
+      100% {
+        opacity: 1;
+      }
+
+      50% {
+        opacity: 0.4;
+      }
     }
 
     .status-text {
@@ -97,8 +114,14 @@
       color: #aaa;
       transition: color 0.3s;
     }
-    .status-text.active { color: #2ecc71; }
-    .status-text.loading { color: #f39c12; }
+
+    .status-text.active {
+      color: #2ecc71;
+    }
+
+    .status-text.loading {
+      color: #f39c12;
+    }
 
     /* ── Toggle Button ────────────────────────────── */
     #toggleBtn {
@@ -118,20 +141,29 @@
       position: relative;
       overflow: hidden;
     }
+
     #toggleBtn::after {
       content: '';
       position: absolute;
       inset: 0;
-      background: linear-gradient(135deg, rgba(255,255,255,0.15), transparent);
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.15), transparent);
       opacity: 0;
       transition: opacity 0.3s;
     }
-    #toggleBtn:hover::after { opacity: 1; }
-    #toggleBtn:active { transform: scale(0.97); }
+
+    #toggleBtn:hover::after {
+      opacity: 1;
+    }
+
+    #toggleBtn:active {
+      transform: scale(0.97);
+    }
+
     #toggleBtn.active {
       background: linear-gradient(135deg, #2ecc71, #27ae60);
       box-shadow: 0 4px 15px rgba(46, 204, 113, 0.3);
     }
+
     #toggleBtn:disabled {
       opacity: 0.5;
       cursor: wait;
@@ -170,20 +202,24 @@
       transition: all 0.25s ease;
       user-select: none;
     }
+
     .lang-chip:hover {
       background: rgba(255, 255, 255, 0.08);
       color: #ccc;
       border-color: rgba(255, 255, 255, 0.2);
     }
+
     .lang-chip.selected {
       background: linear-gradient(135deg, rgba(231, 76, 60, 0.2), rgba(155, 89, 182, 0.2));
       color: #fff;
       border-color: rgba(231, 76, 60, 0.5);
       box-shadow: 0 2px 8px rgba(231, 76, 60, 0.15);
     }
+
     .lang-chip .lang-icon {
       font-size: 14px;
     }
+
     .lang-chip .lang-name {
       font-size: 11.5px;
     }
@@ -196,12 +232,14 @@
       margin-top: 10px;
       margin-bottom: 4px;
     }
+
     .locale-row label {
       font-size: 11px;
       color: #777;
       font-weight: 500;
       letter-spacing: 0.5px;
     }
+
     #localeSelect {
       flex: 1;
       background: rgba(255, 255, 255, 0.06);
@@ -214,9 +252,11 @@
       outline: none;
       font-family: inherit;
     }
+
     #localeSelect:focus {
       border-color: rgba(231, 76, 60, 0.5);
     }
+
     #localeSelect option {
       background: #1a1a2e;
       color: #ccc;
@@ -230,6 +270,7 @@
       border-radius: 10px;
       border: 1px solid rgba(255, 255, 255, 0.06);
     }
+
     .legend-title {
       font-size: 11px;
       text-transform: uppercase;
@@ -238,11 +279,13 @@
       margin-bottom: 10px;
       font-weight: 600;
     }
+
     .legend-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 6px 12px;
     }
+
     .legend-item {
       display: flex;
       align-items: center;
@@ -250,6 +293,7 @@
       font-size: 11.5px;
       color: #bbb;
     }
+
     .legend-swatch {
       width: 10px;
       height: 10px;
@@ -265,12 +309,46 @@
       padding: 8px 0;
     }
 
+    .legend-controls {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-right: 4px;
+    }
+
+    .legend-toggle {
+      width: 14px;
+      height: 14px;
+      cursor: pointer;
+      accent-color: #e74c3c;
+    }
+
+    .legend-color-picker {
+      width: 16px;
+      height: 16px;
+      padding: 0;
+      border: none;
+      cursor: pointer;
+      background: none;
+      border-radius: 4px;
+    }
+
+    .legend-color-picker::-webkit-color-swatch-wrapper {
+      padding: 0;
+    }
+
+    .legend-color-picker::-webkit-color-swatch {
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 4px;
+    }
+
     /* ── Tab bar for multiple legends ──────────────── */
     .legend-tabs {
       display: flex;
       gap: 4px;
       margin-bottom: 10px;
     }
+
     .legend-tab {
       padding: 4px 10px;
       font-size: 11px;
@@ -282,10 +360,12 @@
       color: #777;
       transition: all 0.2s;
     }
+
     .legend-tab:hover {
       background: rgba(255, 255, 255, 0.06);
       color: #aaa;
     }
+
     .legend-tab.active {
       background: rgba(231, 76, 60, 0.15);
       border-color: rgba(231, 76, 60, 0.3);
@@ -302,6 +382,7 @@
     }
   </style>
 </head>
+
 <body>
 
   <div class="header">
@@ -350,4 +431,5 @@
 
   <script src="popup.js"></script>
 </body>
+
 </html>

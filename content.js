@@ -29,25 +29,30 @@ const SKIP_TAGS = new Set([
   'IFRAME', 'OBJECT', 'EMBED',
 ]);
 
-let isActive   = false;
-let tokenizer  = null;
-let isLoading  = false;
+let isActive = false;
+let tokenizer = null;
+let isLoading = false;
 let pendingActivation = false;
 
 // Línguas ativas e dados compilados
-let activeLangs    = [];      // [{ id, detectRegex, compiled, engine }]
-let currentLocale  = 'pt-BR';
+let activeLangs = [];      // [{ id, detectRegex, compiled, engine }]
+let currentLocale = 'pt-BR';
 
 // Observador de mutações e navegação SPA
-let observer       = null;
-let debounceTimer  = null;
-let lastUrl        = location.href;
-const DEBOUNCE_MS  = 300;
+let observer = null;
+let debounceTimer = null;
+let lastUrl = location.href;
+let DEBOUNCE_MS = 300;
 
+// Otimização para sites de vídeo/legendas
+if (/(youtube\.com|netflix\.com|crunchyroll\.com|viki\.com|primevideo\.com|hulu\.com|animelon\.com)/i.test(location.hostname)) {
+  DEBOUNCE_MS = 50;
+  console.log('[日本語カラー] Site de vídeo detectado. Taxa de atualização (debounce) reduzida para acompanhar legendas.');
+}
 // Estado do Highlight API (Sem modificar o DOM)
-const nodeRanges     = new WeakMap();     // TextNode -> Range[]
-const highlightMap   = new Map();         // Color -> Highlight object
-const rangeData      = new WeakMap();     // Range -> { color, title }
+const nodeRanges = new WeakMap();     // TextNode -> Range[]
+const highlightMap = new Map();         // Color -> Highlight object
+const rangeData = new WeakMap();     // Range -> { color, title }
 const processedNodes = new WeakSet();     // TextNodes já processados
 
 let tooltipEl = null;
@@ -159,6 +164,24 @@ function addHighlightCSS(color) {
   }
 }
 
+// CSS para SOV roles (usa background-color, coexiste com grammar colors)
+const sovHighlightMap = new Map();  // sovKey -> Highlight
+
+function addSovHighlightCSS(bgColor, borderColor, sovKey) {
+  let styleEl = document.getElementById('jp-hl-styles');
+  if (!styleEl) return;
+  if (!styleEl.textContent.includes(sovKey)) {
+    styleEl.textContent += `
+      ::highlight(${sovKey}) {
+        background-color: ${bgColor} !important;
+        text-decoration: underline solid ${borderColor} !important;
+        text-decoration-thickness: 2px !important;
+        text-underline-offset: 2px;
+      }
+    `;
+  }
+}
+
 function removeRangesForNode(node) {
   const ranges = nodeRanges.get(node);
   if (ranges) {
@@ -204,7 +227,7 @@ document.addEventListener('mousemove', (e) => {
     if (tooltipEl) tooltipEl.style.display = 'none';
     return;
   }
-  
+
   let range;
   if (document.caretRangeFromPoint) {
     range = document.caretRangeFromPoint(e.clientX, e.clientY);
@@ -214,7 +237,7 @@ document.addEventListener('mousemove', (e) => {
   if (range && range.startContainer.nodeType === Node.TEXT_NODE) {
     const node = range.startContainer;
     const offset = range.startOffset;
-    
+
     const ranges = nodeRanges.get(node);
     if (ranges) {
       for (const r of ranges) {
@@ -230,10 +253,26 @@ document.addEventListener('mousemove', (e) => {
     const data = rangeData.get(foundRange);
     if (!tooltipEl) createTooltip();
     tooltipEl.textContent = data.title;
-    tooltipEl.style.left = (e.clientX + 15) + 'px';
-    tooltipEl.style.top = (e.clientY + 15) + 'px';
+
+    // Mostrar acima do cursor para não sobrepor o Rikaikun (que aparece abaixo)
     tooltipEl.style.display = 'block';
-    
+    const tipH = tooltipEl.offsetHeight || 30;
+    const tipW = tooltipEl.offsetWidth || 200;
+    const OFFSET = 12;
+
+    let top = e.clientY - tipH - OFFSET;
+    let left = e.clientX + OFFSET;
+
+    // Fallback: se sair do topo da tela, mostra abaixo mesmo
+    if (top < 4) top = e.clientY + OFFSET + 16;
+    // Clamp horizontal: não sair da borda direita
+    if (left + tipW > window.innerWidth - 4) left = window.innerWidth - tipW - 8;
+    // Clamp esquerda
+    if (left < 4) left = 4;
+
+    tooltipEl.style.left = left + 'px';
+    tooltipEl.style.top = top + 'px';
+
     if (currentHoverRange !== foundRange) {
       currentHoverRange = foundRange;
       const hoverHl = CSS.highlights.get('jp-hover');
@@ -264,9 +303,18 @@ function processTextNodeKuromoji(node, compiled) {
   const tokens = tokenizer.tokenize(text);
   let currentIndex = 0;
   let i = 0;
-  
+
   const ranges = nodeRanges.get(node) || [];
 
+  // Pré-computar posições de cada token para o SOV pass
+  const tokenPositions = [];
+  let posAccum = 0;
+  for (const tok of tokens) {
+    tokenPositions.push({ start: posAccum, end: posAccum + tok.surface_form.length });
+    posAccum += tok.surface_form.length;
+  }
+
+  // Pass 1: Grammar highlighting (partículas, formas verbais, adjetivos)
   while (i < tokens.length) {
     const tok = tokens[i];
     const style = resolveTokenStyle(tokens, i, compiled);
@@ -276,7 +324,7 @@ function processTextNodeKuromoji(node, compiled) {
         const range = new Range();
         range.setStart(node, currentIndex);
         range.setEnd(node, currentIndex + style.text.length);
-        
+
         let hl = highlightMap.get(style.color);
         if (!hl) {
           hl = new Highlight();
@@ -284,7 +332,7 @@ function processTextNodeKuromoji(node, compiled) {
           CSS.highlights.set('jp-color-' + style.color.replace('#', ''), hl);
           addHighlightCSS(style.color);
         }
-        
+
         hl.add(range);
         rangeData.set(range, { color: style.color, title: style.title });
         ranges.push(range);
@@ -299,8 +347,92 @@ function processTextNodeKuromoji(node, compiled) {
     }
   }
 
+  // Pass 2: SOV role highlighting (background-color layer)
+  if (compiled.sovRoles) {
+    processSovPass(node, tokens, tokenPositions, compiled.sovRoles, ranges);
+  }
+
   if (ranges.length > 0) {
     nodeRanges.set(node, ranges);
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// SOV PASS — SUJEITO / OBJETO / VERBO (BACKGROUND LAYER)
+// ═══════════════════════════════════════════════════════════════════
+
+function isNounLike(token, sovRole) {
+  const pos = token.pos;
+  const pos1 = token.pos_detail_1;
+  // Noun + not excluded subtypes (非自立, 接尾)
+  if (sovRole.nounPOS.has(pos) && !sovRole.nounPOSExclude.has(pos1)) return true;
+  // Also include prefix/prenominal (接頭詞, 連体詞)
+  if (sovRole.alsoIncludePOS.has(pos)) return true;
+  return false;
+}
+
+function addSovRange(node, start, end, sovRole, ranges) {
+  try {
+    const range = new Range();
+    range.setStart(node, start);
+    range.setEnd(node, end);
+
+    const sovKey = 'jp-sov-' + sovRole.borderColor.replace('#', '');
+    let hl = sovHighlightMap.get(sovKey);
+    if (!hl) {
+      hl = new Highlight();
+      sovHighlightMap.set(sovKey, hl);
+      CSS.highlights.set(sovKey, hl);
+      addSovHighlightCSS(sovRole.color, sovRole.borderColor, sovKey);
+    }
+
+    hl.add(range);
+    rangeData.set(range, { color: sovRole.borderColor, title: sovRole.title });
+    ranges.push(range);
+  } catch (e) {
+    // Ignora erros de Range
+  }
+}
+
+function processSovPass(node, tokens, tokenPositions, sovRoles, ranges) {
+  // 1) Subject & Object: encontra partículas gatilho e olha para trás
+  for (const role of ['subject', 'object']) {
+    const config = sovRoles[role];
+    if (!config) continue;
+
+    for (let i = 0; i < tokens.length; i++) {
+      const tok = tokens[i];
+      if (tok.pos !== config.triggerPOS) continue;
+      if (!config.triggerParticles.has(tok.surface_form)) continue;
+
+      // Lookback: encontrar substantivos consecutivos antes da partícula
+      let spanStart = null;
+      let spanEnd = null;
+
+      for (let j = i - 1; j >= 0; j--) {
+        if (isNounLike(tokens[j], config)) {
+          spanStart = tokenPositions[j].start;
+          if (spanEnd === null) spanEnd = tokenPositions[j].end;
+        } else {
+          break; // Parar no primeiro token não-substantivo
+        }
+      }
+
+      if (spanStart !== null && spanEnd !== null) {
+        addSovRange(node, spanStart, spanEnd, config, ranges);
+      }
+    }
+  }
+
+  // 2) Verb: verbos independentes (動詞 + 自立)
+  if (sovRoles.verb) {
+    const config = sovRoles.verb;
+    for (let i = 0; i < tokens.length; i++) {
+      const tok = tokens[i];
+      if (tok.pos === config.pos && tok.pos_detail_1 === config.posDetail) {
+        addSovRange(node, tokenPositions[i].start, tokenPositions[i].end, config, ranges);
+      }
+    }
   }
 }
 
@@ -350,7 +482,7 @@ function resolveTokenStyle(tokens, idx, compiled) {
     if (quoteStyle[surface]) return { text: surface, color: quoteStyle[surface].color, title: quoteStyle[surface].title, skip: 1 };
     if (conditionalStyle[surface]) return { text: surface, color: conditionalStyle[surface].color, title: conditionalStyle[surface].title, skip: 1 };
     if (finalParticleMulti[surface]) return { text: surface, color: finalParticleMulti[surface].color, title: finalParticleMulti[surface].title, skip: 1 };
-    
+
     if (pos1 === '終助詞' && finalParticleStyle) {
       return { text: surface, color: finalParticleStyle.color, title: finalParticleStyle.title + ' (' + surface + ')', skip: 1 };
     }
@@ -551,6 +683,7 @@ function deduplicateNodes(nodes) {
   if (nodes.length <= 1) return nodes;
   const set = new Set(nodes);
   return nodes.filter(node => {
+    if (!node) return false;
     let parent = node.parentElement;
     while (parent && parent !== document.body) {
       if (set.has(parent)) return false;
@@ -579,8 +712,10 @@ function startObserver() {
             pendingNodes.push(added);
             hasWork = true;
           } else if (added.nodeType === Node.TEXT_NODE && containsAnyLanguage(added.nodeValue)) {
-            pendingNodes.push(added.parentElement);
-            hasWork = true;
+            if (added.parentElement) {
+              pendingNodes.push(added.parentElement);
+              hasWork = true;
+            }
           }
         }
       }
@@ -589,10 +724,12 @@ function startObserver() {
         const target = mutation.target;
         removeRangesForNode(target);
         processedNodes.delete(target);
-        
+
         if (containsAnyLanguage(target.nodeValue)) {
-          pendingNodes.push(target.parentElement);
-          hasWork = true;
+          if (target.parentElement) {
+            pendingNodes.push(target.parentElement);
+            hasWork = true;
+          }
         }
       }
     }
@@ -670,9 +807,13 @@ function clearHighlights() {
     for (const key of highlightMap.keys()) {
       CSS.highlights.delete('jp-color-' + key.replace('#', ''));
     }
+    for (const key of sovHighlightMap.keys()) {
+      CSS.highlights.delete(key);
+    }
     CSS.highlights.delete('jp-hover');
   }
   highlightMap.clear();
+  sovHighlightMap.clear();
   if (tooltipEl) tooltipEl.style.display = 'none';
 }
 
@@ -724,7 +865,7 @@ chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
     activate().then((status) => {
       sendResponse({ status });
     });
-    return true; 
+    return true;
   }
 
   if (message.action === 'deactivate') {
@@ -773,6 +914,21 @@ chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
       }
     }
     sendResponse({ status: 'ok', locale: currentLocale });
+    return true;
+  }
+
+  if (message.action === 'updateCustomStyles') {
+    if (LangDB.isReady()) {
+      LangDB.updateCustomStyles(message.styles);
+      for (const lang of activeLangs) {
+        lang.compiled = LangDB.getCompiled(lang.id);
+      }
+      clearHighlights();
+      nodeRanges.clear();
+      rangeData.clear();
+      if (isActive) processPage();
+    }
+    sendResponse({ status: 'ok' });
     return true;
   }
 

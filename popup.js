@@ -9,13 +9,13 @@
  *  - Estado de carregamento do Kuromoji
  */
 
-const toggleBtn     = document.getElementById('toggleBtn');
-const statusDot     = document.getElementById('statusDot');
-const statusText    = document.getElementById('statusText');
-const langSelector  = document.getElementById('langSelector');
-const localeSelect  = document.getElementById('localeSelect');
-const legendTabs    = document.getElementById('legendTabs');
-const legendGrid    = document.getElementById('legendGrid');
+const toggleBtn = document.getElementById('toggleBtn');
+const statusDot = document.getElementById('statusDot');
+const statusText = document.getElementById('statusText');
+const langSelector = document.getElementById('langSelector');
+const localeSelect = document.getElementById('localeSelect');
+const legendTabs = document.getElementById('legendTabs');
+const legendGrid = document.getElementById('legendGrid');
 
 let allLanguages = [];
 let selectedLangs = new Set();
@@ -24,7 +24,7 @@ let activeLegendTab = null;
 // ── UI helpers ────────────────────────────────────────────────────
 
 function setUI(state) {
-  statusDot.className  = 'status-dot';
+  statusDot.className = 'status-dot';
   statusText.className = 'status-text';
   toggleBtn.classList.remove('active');
   toggleBtn.disabled = false;
@@ -122,7 +122,7 @@ async function loadLegend(langId) {
     });
 
     if (response?.legend?.length > 0) {
-      renderLegendGrid(response.legend);
+      renderLegendGrid(response.legend, langId);
     } else {
       renderFallbackLegend(langId);
     }
@@ -131,14 +131,87 @@ async function loadLegend(langId) {
   }
 }
 
-function renderLegendGrid(legend) {
+function rgbaToHex(color) {
+  if (!color) return '#ffffff';
+  if (color.startsWith('#')) return color.slice(0, 7);
+  if (color.startsWith('rgba') || color.startsWith('rgb')) {
+    const parts = color.substring(color.indexOf('(') + 1).split(',').map(p => parseInt(p.trim()));
+    return '#' + parts.slice(0, 3).map(x => x.toString(16).padStart(2, '0')).join('');
+  }
+  return '#ffffff';
+}
+
+function renderLegendGrid(legend, langId) {
   legendGrid.innerHTML = '';
   for (const item of legend) {
     const el = document.createElement('div');
     el.className = 'legend-item';
+    if (item.enabled === false) el.style.opacity = '0.4';
+
     const sampleText = item.sample ? item.sample + ' ' : '';
-    el.innerHTML = `<span class="legend-swatch" style="background:${item.color}"></span>${sampleText}${item.label}`;
+    const baseColor = item.style === 'sov' ? item.borderColor : item.color;
+    const hexColor = rgbaToHex(baseColor);
+
+    const controlsHtml = item.categoryId ? `
+      <div class="legend-controls">
+        <input type="checkbox" class="legend-toggle" data-cat="${item.categoryId}" ${item.enabled !== false ? 'checked' : ''} title="Ativar/Desativar">
+        <input type="color" class="legend-color-picker" data-cat="${item.categoryId}" data-style="${item.style}" value="${hexColor}" title="Mudar cor">
+      </div>
+    ` : `
+      <div class="legend-controls">
+        <span class="legend-swatch" style="background:${item.color}; ${item.style === 'sov' ? `border: 2px solid ${item.borderColor || item.color}` : ''}"></span>
+      </div>
+    `;
+
+    el.innerHTML = `${controlsHtml}<span class="legend-label">${sampleText}${item.label}</span>`;
+
     legendGrid.appendChild(el);
+  }
+
+  const toggles = legendGrid.querySelectorAll('.legend-toggle');
+  toggles.forEach(t => t.addEventListener('change', (e) => updateCategory(langId, e.target.dataset.cat, 'enabled', e.target.checked)));
+
+  const pickers = legendGrid.querySelectorAll('.legend-color-picker');
+  pickers.forEach(p => p.addEventListener('change', (e) => updateCategoryColor(langId, e.target.dataset.cat, e.target.dataset.style, e.target.value)));
+}
+
+async function updateCategory(langId, catId, key, value) {
+  const stored = await chrome.storage.local.get(['jpCustomStyles']);
+  const styles = stored.jpCustomStyles || {};
+  if (!styles[langId]) styles[langId] = {};
+  if (!styles[langId][catId]) styles[langId][catId] = {};
+
+  styles[langId][catId][key] = value;
+  await chrome.storage.local.set({ jpCustomStyles: styles });
+  notifyContentScript(styles);
+  loadLegend(langId);
+}
+
+async function updateCategoryColor(langId, catId, styleType, hexValue) {
+  const stored = await chrome.storage.local.get(['jpCustomStyles']);
+  const styles = stored.jpCustomStyles || {};
+  if (!styles[langId]) styles[langId] = {};
+  if (!styles[langId][catId]) styles[langId][catId] = {};
+
+  if (styleType === 'sov') {
+    const r = parseInt(hexValue.slice(1, 3), 16);
+    const g = parseInt(hexValue.slice(3, 5), 16);
+    const b = parseInt(hexValue.slice(5, 7), 16);
+    styles[langId][catId].borderColor = hexValue;
+    styles[langId][catId].color = 'rgba(' + r + ', ' + g + ', ' + b + ', 0.18)';
+  } else {
+    styles[langId][catId].color = hexValue;
+  }
+
+  await chrome.storage.local.set({ jpCustomStyles: styles });
+  notifyContentScript(styles);
+  loadLegend(langId);
+}
+
+async function notifyContentScript(styles) {
+  const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+  if (tab?.id) {
+    chrome.tabs.sendMessage(tab.id, { action: 'updateCustomStyles', styles });
   }
 }
 
@@ -146,6 +219,9 @@ function renderFallbackLegend(langId) {
   // Fallback: legenda genérica baseada no langId
   const fallbackData = {
     japanese: [
+      { color: 'rgba(52,152,219,0.18)', borderColor: '#3498DB', label: '[S] Sujeito', sample: '[S]', style: 'sov' },
+      { color: 'rgba(155,89,182,0.18)', borderColor: '#9B59B6', label: '[O] Objeto', sample: '[O]', style: 'sov' },
+      { color: 'rgba(231,76,60,0.18)', borderColor: '#E74C3C', label: '[V] Verbo', sample: '[V]', style: 'sov' },
       { color: '#C0392B', label: 'は Tópico' },
       { color: '#D35400', label: 'が Sujeito' },
       { color: '#27AE60', label: 'に Alvo' },
@@ -225,14 +301,14 @@ async function initPopup() {
     if (response?.languages?.length > 0) {
       allLanguages = response.languages;
     }
-  } catch {}
+  } catch { }
 
   // Fallback se o content script não respondeu
   if (allLanguages.length === 0) {
     allLanguages = [
       { id: 'japanese', name: 'Japonês', native: '日本語', icon: '🇯🇵', engine: 'kuromoji' },
-      { id: 'korean',   name: 'Coreano', native: '한국어', icon: '🇰🇷', engine: 'regex' },
-      { id: 'chinese',  name: 'Chinês',  native: '中文',   icon: '🇨🇳', engine: 'regex' },
+      { id: 'korean', name: 'Coreano', native: '한국어', icon: '🇰🇷', engine: 'regex' },
+      { id: 'chinese', name: 'Chinês', native: '中文', icon: '🇨🇳', engine: 'regex' },
     ];
   }
 

@@ -30,10 +30,13 @@ const LangDB = {
     if (this._ready) return;
     this._locale = locale || 'pt-BR';
 
-    // 1) Carregar registry
+    // 1) Carregar registry e custom styles
     const registryUrl = chrome.runtime.getURL('languages/registry.json');
     const res = await fetch(registryUrl);
     this._registry = await res.json();
+    
+    const stored = await chrome.storage.local.get(['jpCustomStyles']);
+    this._customStyles = stored.jpCustomStyles || {};
 
     // 2) Carregar cada pack habilitado
     const loadPromises = this._registry.languages
@@ -64,9 +67,15 @@ const LangDB = {
   _compilePack(pack) {
     const locale = this._locale;
     const cats = pack.categories || {};
+    const langId = pack.id;
+    const customStyles = this._customStyles[langId] || {};
+
+    const catEnabled = (catId) => customStyles[catId]?.enabled !== false;
 
     // Resolve a cor e tooltip de uma categoria
-    const catColor = (catId) => cats[catId]?.color || '#888';
+    const catColor = (catId) => customStyles[catId]?.color || cats[catId]?.color || '#888';
+    const catBorderColor = (catId) => customStyles[catId]?.borderColor || cats[catId]?.borderColor || catColor(catId);
+    
     const catLabel = (catId) => {
       const cat = cats[catId];
       if (!cat) return catId;
@@ -82,10 +91,12 @@ const LangDB = {
     const particleStyle = {};
     if (pack.particles) {
       for (const [surface, data] of Object.entries(pack.particles)) {
-        particleStyle[surface] = {
-          color: catColor(data.category),
-          title: resolveTooltip(data.tooltip),
-        };
+        if (catEnabled(data.category)) {
+          particleStyle[surface] = {
+            color: catColor(data.category),
+            title: resolveTooltip(data.tooltip),
+          };
+        }
       }
     }
 
@@ -94,17 +105,19 @@ const LangDB = {
     let finalParticleMulti = {};
     if (pack.finalParticles) {
       const fp = pack.finalParticles;
-      finalParticleStyle = {
-        color: catColor(fp.category),
-        title: catLabel(fp.category),
-        surfaces: new Set(fp.surfaces || []),
-      };
-      if (fp.multiWord) {
-        for (const [surface, data] of Object.entries(fp.multiWord)) {
-          finalParticleMulti[surface] = {
-            color: catColor(fp.category),
-            title: resolveTooltip(data.tooltip),
-          };
+      if (catEnabled(fp.category)) {
+        finalParticleStyle = {
+          color: catColor(fp.category),
+          title: catLabel(fp.category),
+          surfaces: new Set(fp.surfaces || []),
+        };
+        if (fp.multiWord) {
+          for (const [surface, data] of Object.entries(fp.multiWord)) {
+            finalParticleMulti[surface] = {
+              color: catColor(fp.category),
+              title: resolveTooltip(data.tooltip),
+            };
+          }
         }
       }
     }
@@ -113,10 +126,12 @@ const LangDB = {
     const conditionalStyle = {};
     if (pack.conditionals) {
       for (const [surface, data] of Object.entries(pack.conditionals)) {
-        conditionalStyle[surface] = {
-          color: catColor(data.category),
-          title: resolveTooltip(data.tooltip),
-        };
+        if (catEnabled(data.category)) {
+          conditionalStyle[surface] = {
+            color: catColor(data.category),
+            title: resolveTooltip(data.tooltip),
+          };
+        }
       }
     }
 
@@ -124,10 +139,12 @@ const LangDB = {
     const quoteStyle = {};
     if (pack.quotes) {
       for (const [surface, data] of Object.entries(pack.quotes)) {
-        quoteStyle[surface] = {
-          color: catColor(data.category),
-          title: resolveTooltip(data.tooltip),
-        };
+        if (catEnabled(data.category)) {
+          quoteStyle[surface] = {
+            color: catColor(data.category),
+            title: resolveTooltip(data.tooltip),
+          };
+        }
       }
     }
 
@@ -137,16 +154,18 @@ const LangDB = {
     let auxTeFormConfig = null;
     if (pack.auxiliaryCompounds?.teForm) {
       const tf = pack.auxiliaryCompounds.teForm;
-      auxCompoundColor = catColor(tf.category);
-      auxTeFormConfig = {
-        triggers: new Set(tf.triggers || []),
-        triggerPOS: tf.triggerPOS,
-        triggerPOSDetail: tf.triggerPOSDetail,
-        nextPOS: tf.nextPOS,
-        nextPOSDetail: tf.nextPOSDetail,
-      };
-      for (const [verb, data] of Object.entries(tf.verbs || {})) {
-        auxCompoundMap[verb] = resolveTooltip(data.tooltip);
+      if (catEnabled(tf.category)) {
+        auxCompoundColor = catColor(tf.category);
+        auxTeFormConfig = {
+          triggers: new Set(tf.triggers || []),
+          triggerPOS: tf.triggerPOS,
+          triggerPOSDetail: tf.triggerPOSDetail,
+          nextPOS: tf.nextPOS,
+          nextPOSDetail: tf.nextPOSDetail,
+        };
+        for (const [verb, data] of Object.entries(tf.verbs || {})) {
+          auxCompoundMap[verb] = resolveTooltip(data.tooltip);
+        }
       }
     }
 
@@ -154,10 +173,12 @@ const LangDB = {
     const colloquialStyle = {};
     if (pack.colloquials) {
       for (const [surface, data] of Object.entries(pack.colloquials)) {
-        colloquialStyle[surface] = {
-          color: catColor(data.category),
-          title: resolveTooltip(data.tooltip),
-        };
+        if (catEnabled(data.category)) {
+          colloquialStyle[surface] = {
+            color: catColor(data.category),
+            title: resolveTooltip(data.tooltip),
+          };
+        }
       }
     }
 
@@ -165,12 +186,14 @@ const LangDB = {
     const auxVerbalStyle = {};
     if (pack.auxiliaryVerbal) {
       for (const [surface, data] of Object.entries(pack.auxiliaryVerbal)) {
-        auxVerbalStyle[surface] = {
-          color: catColor(data.category),
-          title: resolveTooltip(data.tooltip),
-          matchField: data.matchField || 'surface_form',
-          altMatchField: data.altMatchField || null,
-        };
+        if (catEnabled(data.category)) {
+          auxVerbalStyle[surface] = {
+            color: catColor(data.category),
+            title: resolveTooltip(data.tooltip),
+            matchField: data.matchField || 'surface_form',
+            altMatchField: data.altMatchField || null,
+          };
+        }
       }
     }
 
@@ -178,15 +201,17 @@ const LangDB = {
     const verbFormRules = [];
     if (pack.verbForms) {
       for (const [key, data] of Object.entries(pack.verbForms)) {
-        verbFormRules.push({
-          id: key,
-          pos: data.pos,
-          matchField: data.matchField,
-          matchValue: data.matchValue,
-          surfaceExclude: data.surfaceExclude || [],
-          color: catColor(data.category),
-          title: resolveTooltip(data.tooltip),
-        });
+        if (catEnabled(data.category)) {
+          verbFormRules.push({
+            id: key,
+            pos: data.pos,
+            matchField: data.matchField,
+            matchValue: data.matchValue,
+            surfaceExclude: data.surfaceExclude || [],
+            color: catColor(data.category),
+            title: resolveTooltip(data.tooltip),
+          });
+        }
       }
     }
 
@@ -194,13 +219,15 @@ const LangDB = {
     const verbConjugationRules = [];
     if (pack.verbConjugations) {
       for (const [key, data] of Object.entries(pack.verbConjugations)) {
-        verbConjugationRules.push({
-          id: key,
-          pos: data.pos,
-          conjugatedFormMatch: data.conjugatedFormMatch,
-          color: catColor(data.category),
-          title: resolveTooltip(data.tooltip),
-        });
+        if (catEnabled(data.category)) {
+          verbConjugationRules.push({
+            id: key,
+            pos: data.pos,
+            conjugatedFormMatch: data.conjugatedFormMatch,
+            color: catColor(data.category),
+            title: resolveTooltip(data.tooltip),
+          });
+        }
       }
     }
 
@@ -208,27 +235,73 @@ const LangDB = {
     let teFormStyle = null;
     if (pack.teFormParticle) {
       const tf = pack.teFormParticle;
-      teFormStyle = {
-        surfaces: new Set(tf.surfaces || []),
-        pos: tf.pos,
-        posDetail: tf.posDetail,
-        skipIfNextIsAuxiliary: tf.skipIfNextIsAuxiliary || false,
-        color: catColor(tf.category),
-        title: resolveTooltip(tf.tooltip),
-      };
+      if (catEnabled(tf.category)) {
+        teFormStyle = {
+          surfaces: new Set(tf.surfaces || []),
+          pos: tf.pos,
+          posDetail: tf.posDetail,
+          skipIfNextIsAuxiliary: tf.skipIfNextIsAuxiliary || false,
+          color: catColor(tf.category),
+          title: resolveTooltip(tf.tooltip),
+        };
+      }
     }
 
     // ── Adjetivos (い-adj, な-adj) ──
     const adjectiveRules = [];
     if (pack.adjectives) {
       for (const [key, data] of Object.entries(pack.adjectives)) {
-        adjectiveRules.push({
-          id: key,
-          pos: data.pos,
-          posDetail: data.posDetail,
-          color: catColor(data.category),
-          title: resolveTooltip(data.tooltip),
-        });
+        if (catEnabled(data.category)) {
+          adjectiveRules.push({
+            id: key,
+            pos: data.pos,
+            posDetail: data.posDetail,
+            color: catColor(data.category),
+            title: resolveTooltip(data.tooltip),
+          });
+        }
+      }
+    }
+
+    // ── SOV Roles (Sujeito-Objeto-Verbo) ──
+    let sovRoles = null;
+    if (pack.sovRoles) {
+      const sr = pack.sovRoles;
+      sovRoles = {};
+
+      // Subject/Object: trigger particles + noun lookback
+      for (const role of ['subject', 'object']) {
+        if (sr[role]) {
+          const r = sr[role];
+          if (catEnabled(r.category)) {
+            const cat = cats[r.category] || {};
+            sovRoles[role] = {
+              triggerParticles: new Set(r.triggerParticles || []),
+              triggerPOS: r.triggerPOS,
+              nounPOS: new Set(r.nounPOS || []),
+              nounPOSExclude: new Set(r.nounPOSExclude || []),
+              alsoIncludePOS: new Set(r.alsoIncludePOS || []),
+              color: catColor(r.category),
+              borderColor: catBorderColor(r.category),
+              title: resolveTooltip(r.tooltip),
+            };
+          }
+        }
+      }
+
+      // Verb: POS matching
+      if (sr.verb) {
+        const v = sr.verb;
+        if (catEnabled(v.category)) {
+          const cat = cats[v.category] || {};
+          sovRoles.verb = {
+            pos: v.pos,
+            posDetail: v.posDetail,
+            color: catColor(v.category),
+            borderColor: catBorderColor(v.category),
+            title: resolveTooltip(v.tooltip),
+          };
+        }
       }
     }
 
@@ -236,21 +309,27 @@ const LangDB = {
     const regexRules = [];
     if (pack.regexRules) {
       for (const rule of pack.regexRules) {
-        const particleData = pack.particles?.[rule.tooltipKey];
-        regexRules.push({
-          id: rule.id,
-          regex: new RegExp(rule.pattern, 'g'),
-          color: catColor(rule.category),
-          title: particleData ? resolveTooltip(particleData.tooltip) : catLabel(rule.category),
-        });
+        if (catEnabled(rule.category)) {
+          const particleData = pack.particles?.[rule.tooltipKey];
+          regexRules.push({
+            id: rule.id,
+            regex: new RegExp(rule.pattern, 'g'),
+            color: catColor(rule.category),
+            title: particleData ? resolveTooltip(particleData.tooltip) : catLabel(rule.category),
+          });
+        }
       }
     }
 
     // ── Legenda para o popup ──
     const legend = (pack.legend || []).map(item => ({
+      categoryId: item.category,
+      enabled: catEnabled(item.category),
       color: catColor(item.category),
+      borderColor: catBorderColor(item.category),
       label: catLabel(item.category),
       sample: item.sample,
+      style: item.style || 'grammar',
     }));
 
     return {
@@ -268,6 +347,7 @@ const LangDB = {
       verbConjugationRules,
       teFormStyle,
       adjectiveRules,
+      sovRoles,
       regexRules,
       legend,
     };
@@ -338,4 +418,15 @@ const LangDB = {
   isReady() {
     return this._ready;
   },
+
+  /** Atualiza estilos customizados (chamado pelo content.js) */
+  updateCustomStyles(styles) {
+    this._customStyles = styles;
+    for (const langId of this._enabledLangs) {
+      const pack = this._packs.get(langId);
+      if (pack) {
+        this._compiled.set(langId, this._compilePack(pack));
+      }
+    }
+  }
 };
