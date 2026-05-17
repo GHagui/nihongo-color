@@ -219,9 +219,9 @@ function renderFallbackLegend(langId) {
   // Fallback: legenda genérica baseada no langId
   const fallbackData = {
     japanese: [
-      { color: 'rgba(52,152,219,0.18)', borderColor: '#3498DB', label: '[S] Sujeito', sample: '[S]', style: 'sov' },
-      { color: 'rgba(155,89,182,0.18)', borderColor: '#9B59B6', label: '[O] Objeto', sample: '[O]', style: 'sov' },
-      { color: 'rgba(231,76,60,0.18)', borderColor: '#E74C3C', label: '[V] Verbo', sample: '[V]', style: 'sov' },
+      { color: 'rgba(52,152,219,0.18)', borderColor: '#3498DB', label: 'Sujeito', sample: '[S]', style: 'sov' },
+      { color: 'rgba(155,89,182,0.18)', borderColor: '#9B59B6', label: 'Objeto', sample: '[O]', style: 'sov' },
+      { color: 'rgba(231,76,60,0.18)', borderColor: '#E74C3C', label: 'Verbo', sample: '[V]', style: 'sov' },
       { color: '#C0392B', label: 'は Tópico' },
       { color: '#D35400', label: 'が Sujeito' },
       { color: '#27AE60', label: 'に Alvo' },

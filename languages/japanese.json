@@ -2,105 +2,195 @@
   "id": "japanese",
   "version": "1.0.0",
   "engine": "kuromoji",
-
   "categories": {
     "topic": {
-      "label": { "pt-BR": "Tópico", "en-US": "Topic", "ja": "主題" },
+      "label": {
+        "pt-BR": "Tópico",
+        "en-US": "Topic",
+        "ja": "主題"
+      },
       "color": "#C0392B"
     },
     "subject": {
-      "label": { "pt-BR": "Sujeito", "en-US": "Subject", "ja": "主語" },
+      "label": {
+        "pt-BR": "Sujeito",
+        "en-US": "Subject",
+        "ja": "主語"
+      },
       "color": "#D35400"
     },
     "target": {
-      "label": { "pt-BR": "Alvo / Tempo / Lugar", "en-US": "Target / Time / Place", "ja": "対象・時・場所" },
+      "label": {
+        "pt-BR": "Alvo / Tempo / Lugar",
+        "en-US": "Target / Time / Place",
+        "ja": "対象・時・場所"
+      },
       "color": "#27AE60"
     },
     "means": {
-      "label": { "pt-BR": "Local da ação / Meio", "en-US": "Location / Means", "ja": "場所・手段" },
+      "label": {
+        "pt-BR": "Local da ação / Meio",
+        "en-US": "Location / Means",
+        "ja": "場所・手段"
+      },
       "color": "#2980B9"
     },
     "object": {
-      "label": { "pt-BR": "Objeto Direto", "en-US": "Direct Object", "ja": "直接目的語" },
+      "label": {
+        "pt-BR": "Objeto Direto",
+        "en-US": "Direct Object",
+        "ja": "直接目的語"
+      },
       "color": "#8E44AD"
     },
     "conjunction": {
-      "label": { "pt-BR": "E / Com / Citação", "en-US": "And / With / Quote", "ja": "と接続" },
+      "label": {
+        "pt-BR": "E / Com / Citação",
+        "en-US": "And / With / Quote",
+        "ja": "と接続"
+      },
       "color": "#16A085"
     },
     "also": {
-      "label": { "pt-BR": "Também / Nem", "en-US": "Also / Neither", "ja": "も" },
+      "label": {
+        "pt-BR": "Também / Nem",
+        "en-US": "Also / Neither",
+        "ja": "も"
+      },
       "color": "#F39C12"
     },
     "possessive": {
-      "label": { "pt-BR": "Posse / Conexão", "en-US": "Possessive / Connection", "ja": "所有・接続" },
+      "label": {
+        "pt-BR": "Posse / Conexão",
+        "en-US": "Possessive / Connection",
+        "ja": "所有・接続"
+      },
       "color": "#1ABC9C"
     },
     "final_particle": {
-      "label": { "pt-BR": "Emoção do falante", "en-US": "Speaker Emotion", "ja": "終助詞" },
+      "label": {
+        "pt-BR": "Emoção do falante",
+        "en-US": "Speaker Emotion",
+        "ja": "終助詞"
+      },
       "color": "#E67E22"
     },
     "conditional": {
-      "label": { "pt-BR": "Condicionais", "en-US": "Conditionals", "ja": "条件" },
+      "label": {
+        "pt-BR": "Condicionais",
+        "en-US": "Conditionals",
+        "ja": "条件"
+      },
       "color": "#8E44AD"
     },
     "quote": {
-      "label": { "pt-BR": "Citação informal / Tópico", "en-US": "Informal Quote / Topic", "ja": "引用" },
+      "label": {
+        "pt-BR": "Citação informal / Tópico",
+        "en-US": "Informal Quote / Topic",
+        "ja": "引用"
+      },
       "color": "#9B59B6"
     },
     "auxiliary": {
-      "label": { "pt-BR": "Auxiliares compostos", "en-US": "Compound Auxiliaries", "ja": "複合助動詞" },
+      "label": {
+        "pt-BR": "Auxiliares compostos",
+        "en-US": "Compound Auxiliaries",
+        "ja": "複合助動詞"
+      },
       "color": "#2C3E50"
     },
     "verb_te": {
-      "label": { "pt-BR": "Forma て (conector)", "en-US": "て-form (connector)", "ja": "て形" },
+      "label": {
+        "pt-BR": "Forma て (conector)",
+        "en-US": "て-form (connector)",
+        "ja": "て形"
+      },
       "color": "#E74C3C"
     },
     "verb_past": {
-      "label": { "pt-BR": "Passado (~た)", "en-US": "Past (~た)", "ja": "過去形" },
+      "label": {
+        "pt-BR": "Passado (~た)",
+        "en-US": "Past (~た)",
+        "ja": "過去形"
+      },
       "color": "#B7472A"
     },
     "verb_negative": {
-      "label": { "pt-BR": "Negativo (~ない)", "en-US": "Negative (~ない)", "ja": "否定形" },
+      "label": {
+        "pt-BR": "Negativo (~ない)",
+        "en-US": "Negative (~ない)",
+        "ja": "否定形"
+      },
       "color": "#95A5A6"
     },
     "verb_volitional": {
-      "label": { "pt-BR": "Volitivo (~おう/よう)", "en-US": "Volitional (~おう/よう)", "ja": "意志形" },
+      "label": {
+        "pt-BR": "Volitivo (~おう/よう)",
+        "en-US": "Volitional (~おう/よう)",
+        "ja": "意志形"
+      },
       "color": "#3498DB"
     },
     "verb_imperative": {
-      "label": { "pt-BR": "Imperativo (comando)", "en-US": "Imperative (command)", "ja": "命令形" },
+      "label": {
+        "pt-BR": "Imperativo (comando)",
+        "en-US": "Imperative (command)",
+        "ja": "命令形"
+      },
       "color": "#E74C3C"
     },
     "verb_polite": {
-      "label": { "pt-BR": "Polido (~ます)", "en-US": "Polite (~ます)", "ja": "丁寧形" },
+      "label": {
+        "pt-BR": "Polido (~ます)",
+        "en-US": "Polite (~ます)",
+        "ja": "丁寧形"
+      },
       "color": "#2ECC71"
     },
     "adj_i": {
-      "label": { "pt-BR": "Adjetivo い", "en-US": "い-Adjective", "ja": "い形容詞" },
+      "label": {
+        "pt-BR": "Adjetivo い",
+        "en-US": "い-Adjective",
+        "ja": "い形容詞"
+      },
       "color": "#E67E22"
     },
     "adj_na": {
-      "label": { "pt-BR": "Adjetivo な", "en-US": "な-Adjective", "ja": "な形容詞" },
+      "label": {
+        "pt-BR": "Adjetivo な",
+        "en-US": "な-Adjective",
+        "ja": "な形容詞"
+      },
       "color": "#F39C12"
     },
     "sov_subject": {
-      "label": { "pt-BR": "[S] Sujeito", "en-US": "[S] Subject", "ja": "[S] 主語" },
+      "label": {
+        "pt-BR": "Sujeito",
+        "en-US": "Subject",
+        "ja": "主語"
+      },
       "color": "rgba(52, 152, 219, 0.18)",
       "borderColor": "#3498DB"
     },
     "sov_object": {
-      "label": { "pt-BR": "[O] Objeto", "en-US": "[O] Object", "ja": "[O] 目的語" },
+      "label": {
+        "pt-BR": "Objeto",
+        "en-US": "Object",
+        "ja": "目的語"
+      },
       "color": "rgba(155, 89, 182, 0.18)",
       "borderColor": "#9B59B6"
     },
     "sov_verb": {
-      "label": { "pt-BR": "[V] Verbo", "en-US": "[V] Verb", "ja": "[V] 動詞" },
+      "label": {
+        "pt-BR": "Verbo",
+        "en-US": "Verb",
+        "ja": "動詞"
+      },
       "color": "rgba(231, 76, 60, 0.18)",
       "borderColor": "#E74C3C"
     }
   },
-
   "particles": {
     "は": {
       "category": "topic",
@@ -199,9 +289,16 @@
       }
     }
   },
-
   "finalParticles": {
-    "surfaces": ["ね", "よ", "ぞ", "ぜ", "わ", "な", "さ"],
+    "surfaces": [
+      "ね",
+      "よ",
+      "ぞ",
+      "ぜ",
+      "わ",
+      "な",
+      "さ"
+    ],
     "category": "final_particle",
     "multiWord": {
       "かな": {
@@ -220,7 +317,6 @@
       }
     }
   },
-
   "conditionals": {
     "ば": {
       "category": "conditional",
@@ -247,7 +343,6 @@
       }
     }
   },
-
   "quotes": {
     "って": {
       "category": "quote",
@@ -258,10 +353,12 @@
       }
     }
   },
-
   "auxiliaryCompounds": {
     "teForm": {
-      "triggers": ["て", "で"],
+      "triggers": [
+        "て",
+        "で"
+      ],
       "triggerPOS": "助詞",
       "triggerPOSDetail": "接続助詞",
       "nextPOS": "動詞",
@@ -327,7 +424,6 @@
       }
     }
   },
-
   "colloquials": {
     "ちゃう": {
       "category": "auxiliary",
@@ -370,7 +466,6 @@
       }
     }
   },
-
   "auxiliaryVerbal": {
     "たら": {
       "category": "conditional",
@@ -392,7 +487,6 @@
       }
     }
   },
-
   "verbForms": {
     "た": {
       "pos": "助動詞",
@@ -409,7 +503,10 @@
       "pos": "助動詞",
       "matchField": "basic_form",
       "matchValue": "だ",
-      "surfaceExclude": ["な", "なら"],
+      "surfaceExclude": [
+        "な",
+        "なら"
+      ],
       "category": "verb_past",
       "tooltip": {
         "pt-BR": "Passado / Cópula (~だ)",
@@ -484,7 +581,6 @@
       }
     }
   },
-
   "verbConjugations": {
     "imperative": {
       "pos": "動詞",
@@ -497,9 +593,11 @@
       }
     }
   },
-
   "teFormParticle": {
-    "surfaces": ["て", "で"],
+    "surfaces": [
+      "て",
+      "で"
+    ],
     "pos": "助詞",
     "posDetail": "接続助詞",
     "category": "verb_te",
@@ -510,7 +608,6 @@
       "ja": "て形：文を繋げる"
     }
   },
-
   "adjectives": {
     "i_adjective": {
       "pos": "形容詞",
@@ -533,14 +630,24 @@
       }
     }
   },
-
   "sovRoles": {
     "subject": {
-      "triggerParticles": ["は", "が"],
+      "triggerParticles": [
+        "は",
+        "が"
+      ],
       "triggerPOS": "助詞",
-      "nounPOS": ["名詞"],
-      "nounPOSExclude": ["非自立", "接尾"],
-      "alsoIncludePOS": ["接頭詞", "連体詞"],
+      "nounPOS": [
+        "名詞"
+      ],
+      "nounPOSExclude": [
+        "非自立",
+        "接尾"
+      ],
+      "alsoIncludePOS": [
+        "接頭詞",
+        "連体詞"
+      ],
       "category": "sov_subject",
       "tooltip": {
         "pt-BR": "[S] Sujeito — quem realiza a ação",
@@ -549,11 +656,21 @@
       }
     },
     "object": {
-      "triggerParticles": ["を"],
+      "triggerParticles": [
+        "を"
+      ],
       "triggerPOS": "助詞",
-      "nounPOS": ["名詞"],
-      "nounPOSExclude": ["非自立", "接尾"],
-      "alsoIncludePOS": ["接頭詞", "連体詞"],
+      "nounPOS": [
+        "名詞"
+      ],
+      "nounPOSExclude": [
+        "非自立",
+        "接尾"
+      ],
+      "alsoIncludePOS": [
+        "接頭詞",
+        "連体詞"
+      ],
       "category": "sov_object",
       "tooltip": {
         "pt-BR": "[O] Objeto — o que sofre a ação",
@@ -572,30 +689,101 @@
       }
     }
   },
-
   "legend": [
-    { "category": "sov_subject",     "sample": "[S]", "style": "sov" },
-    { "category": "sov_object",      "sample": "[O]", "style": "sov" },
-    { "category": "sov_verb",        "sample": "[V]", "style": "sov" },
-    { "category": "topic",           "sample": "は" },
-    { "category": "subject",         "sample": "が" },
-    { "category": "target",          "sample": "に" },
-    { "category": "means",           "sample": "で" },
-    { "category": "object",          "sample": "を" },
-    { "category": "conjunction",     "sample": "と" },
-    { "category": "also",            "sample": "も" },
-    { "category": "possessive",      "sample": "の" },
-    { "category": "auxiliary",       "sample": null },
-    { "category": "final_particle",  "sample": null },
-    { "category": "conditional",     "sample": "ば" },
-    { "category": "quote",           "sample": "って" },
-    { "category": "verb_te",         "sample": "て" },
-    { "category": "verb_past",       "sample": "た" },
-    { "category": "verb_negative",   "sample": "ない" },
-    { "category": "verb_volitional", "sample": "よう" },
-    { "category": "verb_imperative", "sample": "ろ/え" },
-    { "category": "verb_polite",     "sample": "ます" },
-    { "category": "adj_i",           "sample": "い" },
-    { "category": "adj_na",          "sample": "な" }
+    {
+      "category": "sov_subject",
+      "sample": "[S]",
+      "style": "sov"
+    },
+    {
+      "category": "sov_object",
+      "sample": "[O]",
+      "style": "sov"
+    },
+    {
+      "category": "sov_verb",
+      "sample": "[V]",
+      "style": "sov"
+    },
+    {
+      "category": "topic",
+      "sample": "は"
+    },
+    {
+      "category": "subject",
+      "sample": "が"
+    },
+    {
+      "category": "target",
+      "sample": "に"
+    },
+    {
+      "category": "means",
+      "sample": "で"
+    },
+    {
+      "category": "object",
+      "sample": "を"
+    },
+    {
+      "category": "conjunction",
+      "sample": "と"
+    },
+    {
+      "category": "also",
+      "sample": "も"
+    },
+    {
+      "category": "possessive",
+      "sample": "の"
+    },
+    {
+      "category": "auxiliary",
+      "sample": null
+    },
+    {
+      "category": "final_particle",
+      "sample": null
+    },
+    {
+      "category": "conditional",
+      "sample": "ば"
+    },
+    {
+      "category": "quote",
+      "sample": "って"
+    },
+    {
+      "category": "verb_te",
+      "sample": "て"
+    },
+    {
+      "category": "verb_past",
+      "sample": "た"
+    },
+    {
+      "category": "verb_negative",
+      "sample": "ない"
+    },
+    {
+      "category": "verb_volitional",
+      "sample": "よう"
+    },
+    {
+      "category": "verb_imperative",
+      "sample": "ろ/え"
+    },
+    {
+      "category": "verb_polite",
+      "sample": "ます"
+    },
+    {
+      "category": "adj_i",
+      "sample": "い"
+    },
+    {
+      "category": "adj_na",
+      "sample": "な"
+    }
   ]
 }
