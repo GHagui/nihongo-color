@@ -46,7 +46,7 @@ let DEBOUNCE_MS = 300;
 
 // Otimização para sites de vídeo/legendas
 if (/(youtube\.com|netflix\.com|crunchyroll\.com|viki\.com|primevideo\.com|hulu\.com|animelon\.com)/i.test(location.hostname)) {
-  DEBOUNCE_MS = 50;
+  DEBOUNCE_MS = 10;
   console.log('[日本語カラー] Site de vídeo detectado. Taxa de atualização (debounce) reduzida para acompanhar legendas.');
 }
 // Estado do Highlight API (Sem modificar o DOM)
